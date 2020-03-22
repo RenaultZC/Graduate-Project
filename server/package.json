@@ -1,0 +1,38 @@
+{
+  "name": "app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "clean": "rm -rf dist && mkdir dist",
+    "dev": "nodemon app/app.js --exec babel-node",
+    "build": "npm run clean && babel app -d dist --copy-files",
+    "start": "cross-env NODE_ENV=production forever start dist/app.js",
+    "deploy": "npm run stop && npm run build && npm run start",
+    "stop": "forever stop dist/app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@koa/cors": "^3.0.0",
+    "babel-cli": "^6.26.0",
+    "babel-eslint": "^10.1.0",
+    "babel-preset-env": "^1.7.0",
+    "cross-env": "^5.2.0",
+    "crypto": "^1.0.1",
+    "eslint": "^6.8.0",
+    "eslint-plugin-flowtype": "^3.4.2",
+    "eslint-plugin-import": "^2.16.0",
+    "forever": "^0.15.3",
+    "koa": "^2.7.0",
+    "koa-body": "^4.1.0",
+    "koa-respond": "^2.1.0",
+    "koa-router": "^7.4.0",
+    "koa-session": "^5.13.1",
+    "koa-static": "^5.0.0",
+    "loadsh": "^0.0.4",
+    "mysql2": "^2.1.0",
+    "puppeteer": "^1.15.0"
+  }
+}
