@@ -10,6 +10,10 @@ router.post('/addUser', addUser);
 router.post('/changeUser', changeUser);
 router.post('/deleteUser', deleteUser);
 router.post('/login', login);
+router.get('/loginOut', ctx => {
+  ctx.session = null;
+  return ctx.ok({ error: false, msg: '成功退出登录' });
+});
 router.use('/findUser', findUser.routes(), findUser.allowedMethods());
 
 module.exports = router;

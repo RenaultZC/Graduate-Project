@@ -6,6 +6,7 @@ import { axiosPost } from './common/axios';
 import { encrypt } from './common/crypto';
 import errCode from './common/errorCode';
 import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 import './style/login.less';
 
 const { Title } = Typography;
@@ -19,16 +20,38 @@ const tailLayout = {
   wrapperCol: { offset: 9, span: 6 },
 };
 
+const mapStateToProps = (state) => {
+  return {
+    User: state.User
+  }
+}
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    changeUser: (User) => {
+      dispatch({type: 'CHANGE_USER', User})
+    }
+  }
+}
+
 class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      rigetPanelActive: true,
+      rigetPanelActive: false,
+    }
+  }
+
+  componentDidMount() {
+    const id = sessionStorage.getItem('id');
+    if (id) {
+      this.props.history.push('/');
     }
   }
 
   changeClick = (e) => {
-    if (e.target.id === 'signUp' && !this.state.rigetPanelActive) {
+    const targetId = e && e.target && e.target.id;
+    if (targetId === 'signUp' && !this.state.rigetPanelActive) {
       this.setState({rigetPanelActive: true}); 
     } else {
       this.setState({rigetPanelActive: false}); 
@@ -41,10 +64,7 @@ class Login extends Component {
     values = encrypt(values);
     axiosPost('/user/login', values)
     .then(response => {
-      sessionStorage.setItem('username', response.username);
-      sessionStorage.setItem('type', response.type);
-      sessionStorage.setItem('id', response.id);
-      sessionStorage.setItem('avatar', response.avatar);
+      this.props.changeUser(response.data.msg);
       Modal.success({
         content: '登录成功',
         onOk: () => {
@@ -54,9 +74,32 @@ class Login extends Component {
       });
     })
     .catch(error => {
+      console.log(error.response);
       const content  = errCode[error.response.data.errCode];
       Modal.error({
-        title: '登录错误',
+        title: '登录失败',
+        content,
+        centered: true
+      })
+    }).finally(() => this.signUpRef.resetFields());
+  };
+
+  onSignInFinish = values => {
+    values = encrypt(values);
+    axiosPost('/user/addUser', values)
+    .then(response => {
+      Modal.success({
+        content: '注册成功，跳转登录',
+        onOk: () => {
+          this.changeClick();
+        },
+        centered: true
+      });
+    })
+    .catch(error => {
+      const content  = errCode[error.response.data.errCode];
+      Modal.error({
+        title: '注册失败',
         content,
         centered: true
       })
@@ -75,7 +118,7 @@ class Login extends Component {
           <Form
             {...layout}
             name="basic"
-            onFinish={this.onFinish}
+            onFinish={this.onSignInFinish}
             className="login-form"
             hideRequiredMark
             ref={el => (this.signInRef = el)}
@@ -188,4 +231,4 @@ class Login extends Component {
   }
 }
 
-export default withRouter(Login);
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Login));
