@@ -3,8 +3,6 @@ export const USER_TYPE = {
   ADMIN: 1
 };
 
-export const SECRET_KEY = 'test+123';
-
 export const HISTORY_STATUS = {
   RUNNING: 0,
   SUCCESS: 1,

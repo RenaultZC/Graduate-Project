@@ -1,11 +1,10 @@
 import select from '../../dao/select';
-import { aesDecrypt } from '../../common/crypto';
-import { SECRET_KEY } from '../../config/common';
+import { decrypt } from '../../common/crypto';
 
 module.exports = async ctx => {
-  const { username, password } = ctx.request.query;
+  const { username, password } = ctx.request.body;
   if (ctx.session.id) return ctx.ok({ error: false, msg: ctx.session });
-  const user = aesDecrypt(username, SECRET_KEY);
+  const user = decrypt(username);
   let [res] = await select('user', { username: user });
 
   if (!res.length) { [res] = await select('user', { email: user }); }

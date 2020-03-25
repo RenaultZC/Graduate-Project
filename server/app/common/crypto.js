@@ -1,15 +1,36 @@
-const crypto = require('crypto');
+import CryptoJS from 'crypto-js';
 
-// 加密
-export function aesEncrypt(data, key) {
-  const cipher = crypto.createCipher('aes192', key);
-  cipher.update(data, 'utf8', 'hex');
-  return cipher.final('hex');
-}
+const SECRET_KEY = 'test+123';
 
-// 解码
-export function aesDecrypt(encrypt, key) {
-  const decipher = crypto.createDecipher('aes192', key);
-  decipher.update(encrypt, 'hex', 'utf8');
-  return decipher.final('utf8');
-}
+export const encrypt = content => {
+  const changeString = string => {
+    const key = CryptoJS.enc.Utf8.parse(SECRET_KEY);
+    const encryptResult = CryptoJS.AES.encrypt(string, key, {
+      mode: CryptoJS.mode.ECB,
+      padding: CryptoJS.pad.Pkcs7
+    });
+
+    const hexStr = encryptResult.ciphertext.toString();
+
+    return hexStr;
+  };
+  if (typeof content === 'string') {
+    return changeString(content);
+  }
+  Object.keys(content).forEach(v => {
+    content[v] = changeString(content[v]);
+  });
+  return content;
+};
+
+export const decrypt = content => {
+  const key = CryptoJS.enc.Utf8.parse(SECRET_KEY);
+  const bytes = CryptoJS.AES.decrypt(content, key, {
+    //iv: key,
+    mode: CryptoJS.mode.ECB,
+    padding: CryptoJS.pad.Pkcs7,
+    format: CryptoJS.format.Hex
+  });
+  const decryptResult = bytes.toString(CryptoJS.enc.Utf8);
+  return decryptResult.toString();
+};
