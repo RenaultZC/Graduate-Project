@@ -64,7 +64,7 @@ chrome.runtime.onConnect.addListener(
           }else{
             xhr = new ActiveXObject('Microsoft.XMLHTTP')
           } 
-          xhr.open('post', 'http://localhost:1000/puppeteer', true)
+          xhr.open('post', 'http://localhost:1000/analyze/addAnalyze', true)
           xhr.send(JSON.stringify(event.target.result))
           break
         case 'delete':

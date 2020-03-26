@@ -1,8 +1,8 @@
 import insert from '../../dao/insert';
 
 module.exports = async ctx => {
-  const { params } = ctx.requst.body;
-  const [res] = await insert('snippet', params);
+  const { name, value } = JSON.parse(ctx.request.body);
+  const [res] = await insert('snippet', { name, snippet: JSON.stringify(value), time: Date.now() });
   if (res.affectedRows) {
     return ctx.ok({ error: false, msg: '上传成功' });
   }

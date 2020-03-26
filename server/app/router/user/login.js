@@ -4,7 +4,7 @@ import { decrypt } from '../../common/crypto';
 module.exports = async ctx => {
   const { username, password } = ctx.request.body;
   if (ctx.session.id) return ctx.ok({ error: false, msg: ctx.session });
-  if (!(username && password)) return ctx.unauthorized({ error: true, errCode: 1008 });
+  if (!(username && password)) return ctx.badRequest({ error: true, errCode: 1011 });
   const user = decrypt(username);
   let [res] = await select('user', { username: user });
 

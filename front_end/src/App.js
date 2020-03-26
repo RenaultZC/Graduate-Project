@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import { Route, Switch, NavLink  } from 'react-router-dom';
 import { Avatar, Typography, Menu, Dropdown, Modal } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
+import { connect } from 'react-redux';
 import { axiosPost, axiosGet } from './common/axios';
 import NotFound from './404';
-import Login from './login';
-import { connect } from 'react-redux';
+import Login from './user/login';
+import Home from './home';
 import {SERVER_HOST} from './common/config';
 import 'antd/dist/antd.css';
 import './style/index.less';
@@ -104,7 +105,7 @@ class App extends Component {
             </div>
         </div>
         <Switch>
-          <Route path="/" exact component={() => <div>1234</div>}/>
+          <Route path="/" exact component={Home}/>
           <Route path="/login" exact component={Login} />
           <Route path="*" component={NotFound}/>
         </Switch>

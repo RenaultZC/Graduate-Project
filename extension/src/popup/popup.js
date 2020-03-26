@@ -5,7 +5,7 @@ let initPage = (dom, html) => {
       <tr>
         <td>${value.id || value.key}</td>
         <td>${value.name}</td>
-        <td><button class="btn btn-outline-success">使用</button></td>
+        <td><button class="btn btn-outline-success">上传</button></td>
         <td><button class="btn btn-outline-danger">删除</button></td>
       </tr>
     `
@@ -14,7 +14,7 @@ let initPage = (dom, html) => {
     <tr>
       <th>序号</th>
       <th>名称</th>
-      <th>使用</th>
+      <th>上传</th>
       <th>删除</th>
     </tr>
   `)

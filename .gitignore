@@ -1,3 +1,4 @@
 server/app/config/db.js
 server/app/static
 */node_modules
+*/build

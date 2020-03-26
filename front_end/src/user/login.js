@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import classnames from 'classnames';
 import { Form, Input, Button, Typography, Modal } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import { axiosPost } from './common/axios';
-import { encrypt } from './common/crypto';
-import errCode from './common/errorCode';
+import { axiosPost } from '../common/axios';
+import { encrypt } from '../common/crypto';
+import errCode from '../common/errorCode';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import './style/login.less';
+import '../style/login.less';
 
 const { Title } = Typography;
 
@@ -74,7 +74,6 @@ class Login extends Component {
       });
     })
     .catch(error => {
-      console.log(error.response);
       const content  = errCode[error.response.data.errCode];
       Modal.error({
         title: '登录失败',
