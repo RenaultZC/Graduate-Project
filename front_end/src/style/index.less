@@ -10,9 +10,9 @@ input, textarea{outline:none;resize:none;}
 .fr{float:right;}      //右浮动
 .clearFix:after{display:block;content:'';clear:both;zoom:1;}  //清除浮动
 
-@-moz-keyframes rocket-movement { 100% {-moz-transform: translate(1200px,-600px);} }
-@-webkit-keyframes rocket-movement {100% {-webkit-transform: translate(1200px,-600px); } }
-@keyframes rocket-movement { 100% {transform: translate(1200px,-600px);} }
+@-moz-keyframes rocket-movement { 100% {-moz-transform: translate(93vw,-80vh);} }
+@-webkit-keyframes rocket-movement {100% {-webkit-transform: translate(93vw,-80vh); } }
+@keyframes rocket-movement { 100% {transform: translate(93vw,-80vh);} }
 @-moz-keyframes spin-earth { 100% { -moz-transform: rotate(-360deg); transition: transform 20s;  } }
 @-webkit-keyframes spin-earth { 100% { -webkit-transform: rotate(-360deg); transition: transform 20s;  } }
 @keyframes spin-earth{ 100% { -webkit-transform: rotate(-360deg); transform:rotate(-360deg); transition: transform 20s; } }
@@ -107,7 +107,7 @@ input, textarea{outline:none;resize:none;}
 }
 
 .navbar-links{
-  display: inline-block;
+  display: block;
   float: right;
   margin-right: 15px;
   text-transform: uppercase;
@@ -296,4 +296,24 @@ input, textarea{outline:none;resize:none;}
   top: 90%;
   left: 50%;
   animation: glow-star 2s infinite ease-in-out alternate 9s;
+}
+
+.footer-container {
+  max-width: calc(100% - 120px);
+  border-top: 1px solid rgba(255, 255, 255, 0.25);
+  width: 100%;
+  text-align: center;
+  margin: 0 auto;
+  padding: 16px 0;
+  line-height: 32px;
+  font-size: 16px;
+  color: #fff;
+  position: sticky;
+  top: 90vh;
+  a {
+    color: #FFF;
+    &:hover {
+      color: #1890ff;
+    }
+  }
 }

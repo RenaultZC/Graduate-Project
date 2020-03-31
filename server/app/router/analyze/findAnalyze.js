@@ -4,7 +4,7 @@ import select from '../../dao/select';
 
 router.get('/getAnalyze', async ctx => {
   const { query } = ctx.request;
-  const [res] = await select('analyze', query);
+  const [res] = await select('snippet', query);
   if (res.length) {
     return ctx.ok({ error: false, msg: res[0] });
   }
@@ -12,7 +12,7 @@ router.get('/getAnalyze', async ctx => {
 });
 
 router.get('/getAllAnalyze', async ctx => {
-  const [res] = await select('analyze');
+  const [res] = await select('snippet');
   if (res.length) {
     return ctx.ok({ error: false, msg: res });
   }
@@ -21,7 +21,7 @@ router.get('/getAllAnalyze', async ctx => {
 
 router.get('/selectAnalyze', async ctx => {
   const { query } = ctx.request;
-  const [res] = await select('user', query, true);
+  const [res] = await select('snippet', query, true);
   if (res.length) {
     return ctx.ok({ error: false, msg: res });
   }
