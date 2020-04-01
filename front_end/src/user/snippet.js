@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import { List, Avatar, Empty } from 'antd';
 import { ClockCircleOutlined, CodeOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
+import { NavLink } from 'react-router-dom';
 import { axiosGet } from '../common/axios';
 import '../style/snippet.less';
 
@@ -93,7 +94,7 @@ class Snippet extends Component {
               >
                 <List.Item.Meta
                   avatar={<Avatar src={avatar} />}
-                  title={<a href={item.href}>{item.name}</a>}
+                  title={<NavLink to={`/snippet/${item.id}`}>{item.name}</NavLink>}
                   description={`测试网址: ${origin}`}
                 />
                 {item.content}

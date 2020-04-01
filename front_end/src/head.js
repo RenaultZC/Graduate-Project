@@ -1,31 +1,13 @@
 import React, { Component } from 'react';
-import { NavLink  } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { UserOutlined } from '@ant-design/icons';
 import { Avatar, Menu, Dropdown, Typography, Modal } from 'antd';
 import { connect } from 'react-redux';
 import Loading from './component/loading';
 import { SERVER_HOST } from './common/config';
 import { axiosPost, axiosGet } from './common/axios';
-
+import {mapStateToProps, mapDispatchToProps} from './common/store';
 const { Text } = Typography;
-
-const mapStateToProps = (state) => {
-  return {
-    User: state.User,
-    loading: state.loading
-  }
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    changeUser: (User) => {
-      dispatch({type: 'CHANGE_USER', User})
-    },
-    changeLoading: (loading) => {
-      dispatch({type: 'CHANGE_LOADING', loading})
-    }
-  }
-}
 
 @connect(mapStateToProps, mapDispatchToProps)
 class Head extends Component {
@@ -47,7 +29,8 @@ class Head extends Component {
           content: res.data.msg,
           onOk: () => {
             this.props.changeUser({});
-          }
+          },
+          centered: true
         })
       })
   }

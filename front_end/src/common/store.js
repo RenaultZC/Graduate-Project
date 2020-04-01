@@ -15,4 +15,22 @@ const reducer = (state, action) => {
   }
 }
 
+export const mapStateToProps = (state) => {
+  return {
+    User: state.User,
+    loading: state.loading
+  }
+}
+
+export const mapDispatchToProps = (dispatch) => {
+  return {
+    changeUser: (User) => {
+      dispatch({type: 'CHANGE_USER', User})
+    },
+    changeLoading: (loading) => {
+      dispatch({type: 'CHANGE_LOADING', loading})
+    }
+  }
+}
+
 export default createStore(reducer);

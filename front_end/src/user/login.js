@@ -7,6 +7,7 @@ import { encrypt } from '../common/crypto';
 import errCode from '../common/errorCode';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { mapStateToProps, mapDispatchToProps} from '../common/store';
 import '../style/login.less';
 
 const { Title } = Typography;
@@ -19,20 +20,6 @@ const layout = {
 const tailLayout = {
   wrapperCol: { offset: 9, span: 6 },
 };
-
-const mapStateToProps = (state) => {
-  return {
-    User: state.User
-  }
-}
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    changeUser: (User) => {
-      dispatch({type: 'CHANGE_USER', User})
-    }
-  }
-}
 
 class Login extends Component {
   constructor(props) {
@@ -62,6 +49,7 @@ class Login extends Component {
 
   onSignUpFinish = values => {
     values = encrypt(values);
+    this.props.changeLoading(true);
     axiosPost('/user/login', values)
     .then(response => {
       this.props.changeUser(response.data.msg);
@@ -80,11 +68,15 @@ class Login extends Component {
         content,
         centered: true
       })
-    }).finally(() => this.signUpRef.resetFields());
+    }).finally(() => {
+      this.signUpRef.resetFields()
+      this.props.changeLoading(false);
+    });
   };
 
   onSignInFinish = values => {
     values = encrypt(values);
+    this.props.changeLoading(true);
     axiosPost('/user/addUser', values)
     .then(response => {
       Modal.success({
@@ -102,7 +94,10 @@ class Login extends Component {
         content,
         centered: true
       })
-    }).finally(() => this.signUpRef.resetFields());
+    }).finally(() => {
+      this.signUpRef.resetFields()
+      this.props.changeLoading(false);
+    });
   };
 
   render() {
