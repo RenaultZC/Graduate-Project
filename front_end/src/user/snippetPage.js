@@ -1,11 +1,65 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { Descriptions, Avatar, Empty } from 'antd';
+import { Descriptions, Avatar, Empty, Table, Button } from 'antd';
 import { mapStateToProps, mapDispatchToProps } from '../common/store';
+import { CodeOutlined } from '@ant-design/icons';
 import { axiosGet } from '../common/axios';
+import { actionIcon } from '../common/common';
 import '../style/snippetPage.less';
 
+const columns = [
+  {
+    title: '动作',
+    dataIndex: 'action',
+    render: (text) => {
+      const Element = actionIcon[text];
+      return <Element />;
+    }
+  },
+  {
+    title: '选择器',
+    dataIndex: 'selector',
+    align: 'center',
+    render: (text) => {
+      return text ? text : '——';
+    }
+  },
+  {
+    title: '标签名',
+    dataIndex: 'tagName',
+    align: 'center',
+    render: (text) => {
+      return text ? text : '——';
+    }
+  },
+  {
+    title: '内容',
+    dataIndex: 'value',
+    render: (text, record) => {
+      if (record.action === 'goto*') {
+        return (
+          <div style={{ wordWrap: 'break-word', wordBreak: 'break-word' }}>
+            {new URL(text).origin}
+          </div>
+        )
+      }
+      if (typeof text === 'object') {
+        text = JSON.stringify(text).toString();
+      }
+      return (
+        <div style={{ wordWrap: 'break-word', wordBreak: 'break-word' }}>
+          {text ? text + '' : '——'}
+        </div>
+      )
+    },
+    align: 'center'
+  }
+]
+
+const TableFooter = () => {
+  return <Button type="primary" shape="round" icon={<CodeOutlined />}>开始测试</Button>;
+}
 
 @connect(mapStateToProps, mapDispatchToProps)
 @withRouter
@@ -26,7 +80,10 @@ class SnippetPage extends Component {
     axiosGet(`/analyze/findAnalyze/getAnalyze?id=${id}`).then(res => {
       const msg = res.data.msg;
       const { name, time } = msg;
-      const snippet = JSON.parse(msg.snippet); 
+      const snippet = JSON.parse(msg.snippet).map((v, i) => {
+        v.key = i;
+        return v;
+      }); 
       this.setState({
         name,
         time,
@@ -53,7 +110,7 @@ class SnippetPage extends Component {
         <Descriptions title={name} 
           bordered
           layout="vertical"
-          column={{ xxl: 4, xl: 4, lg: 3, md: 3, sm: 2, xs: 1 }}
+          column={{ xxl: 4, xl: 4, lg: 4, md: 4, sm: 2, xs: 1 }}
         >
           <Descriptions.Item label="代码名称">{name}</Descriptions.Item>
           <Descriptions.Item label="创建时间">{new Date(parseInt(time, 0)).toLocaleString()}</Descriptions.Item>
@@ -64,17 +121,18 @@ class SnippetPage extends Component {
           </Descriptions.Item>  
           <Descriptions.Item label="测试代码长度">{snippet.length}行</Descriptions.Item>
           <Descriptions.Item label="代码段">
-            Data disk type: MongoDB
-            <br />
-            Database version: 3.4
-            <br />
-            Package: dds.mongo.mid
-            <br />
-            Storage space: 10 GB
-            <br />
-            Replication factor: 3
-            <br />
-            Region: East China 1<br />
+            <Table
+              style={{width: '100%'}}
+              columns={columns}
+              dataSource={snippet}
+              locale={{
+                filterTitle: '筛选',
+                filterConfirm: '确定',
+                filterReset: '重置',
+                emptyText: '暂无数据',
+              }}
+              footer={TableFooter}
+            />
           </Descriptions.Item>
         </Descriptions>
       </div>
