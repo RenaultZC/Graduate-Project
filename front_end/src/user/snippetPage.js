@@ -1,17 +1,19 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { Descriptions, Avatar, Empty, Table, Button } from 'antd';
+import { Descriptions, Avatar, Empty, Table, Button, Modal } from 'antd';
 import { mapStateToProps, mapDispatchToProps } from '../common/store';
 import { CodeOutlined } from '@ant-design/icons';
 import { axiosGet } from '../common/axios';
 import { actionIcon } from '../common/common';
+import SnippetModal from '../component/snippetModal';
 import '../style/snippetPage.less';
 
 const columns = [
   {
     title: '动作',
     dataIndex: 'action',
+    align: 'center',
     render: (text) => {
       const Element = actionIcon[text];
       return <Element />;
@@ -55,11 +57,7 @@ const columns = [
     },
     align: 'center'
   }
-]
-
-const TableFooter = () => {
-  return <Button type="primary" shape="round" icon={<CodeOutlined />}>开始测试</Button>;
-}
+];
 
 @connect(mapStateToProps, mapDispatchToProps)
 @withRouter
@@ -69,7 +67,9 @@ class SnippetPage extends Component {
     this.state = {
       id: null,
       snippet: null,
-      name: null
+      name: null,
+      visible: true,
+      confirmLoading: false
     }
   }
 
@@ -93,9 +93,48 @@ class SnippetPage extends Component {
     })
   }
 
+  renderFooter = () => {
+    const showModal = () => {
+      // if (!this.props.User.id) {
+      //   return Modal.error({
+      //     title: '运行测试代码出错',
+      //     content: '未登录无权进行操作',
+      //     okText: '登录',
+      //     onOk: () => {
+      //       this.props.history.push('/login');
+      //     },
+      //     centered: true
+      //   });
+      // } 
+      this.setState({
+        visible: true
+      });
+    }
+    const {visible, confirmLoading, name} = this.state;
+    const onOk = () =>{
+
+    };
+    return (
+      <div>
+        <Button type="primary" shape="round" icon={<CodeOutlined />} onClick={showModal}>开始测试</Button>
+        <SnippetModal
+          title={name}
+          visible={visible}
+          confirmLoading={confirmLoading}
+          onCancel={() => {
+            this.setState({
+              visible: false,
+            });
+          }}
+          onOk={onOk}
+          snippet={this.state.snippet}
+        />
+      </div>
+    );
+  }
+
   render() {
     const { name, time, snippet } = this.state;
-    console.log(this.state);
     if (!snippet) 
       return(
         <div className="snippet-container empty-container">
@@ -131,7 +170,7 @@ class SnippetPage extends Component {
                 filterReset: '重置',
                 emptyText: '暂无数据',
               }}
-              footer={TableFooter}
+              footer={this.renderFooter}
             />
           </Descriptions.Item>
         </Descriptions>

@@ -1,0 +1,26 @@
+.snippet-modal-container {
+  max-height: 80vh;
+  width: 80vw;
+  overflow: auto;
+  padding: 0;
+  &::-webkit-scrollbar{
+      width: 8px;
+      height: 8px;
+  }
+
+  /* 设置滚动条的滑轨 */
+  &::-webkit-scrollbar-track {
+        background-color: #463164;
+  }
+
+  /* 滑块 */
+  &::-webkit-scrollbar-thumb {
+    background-image: -webkit-gradient(linear,
+      left bottom,
+      left top,
+      color-stop(0.44, #837698),
+      color-stop(0.72, #EFEFEF),
+      color-stop(0.86, #CEDCF0));
+    border-radius: 4px;
+  }
+}
