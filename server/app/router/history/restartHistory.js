@@ -32,15 +32,13 @@ module.exports = async ctx => {
     const historyId = res.insertId;
     new Promise(() => runAnalyze(snippet, historyId, headless))
       .then(async res => {
+        res.endTime = Date.now();
+        res.status = HISTORY_STATUS.SUCCESS;
         await update('history', {
           search: {
             id: historyId
           },
-          value: {
-            endTime: Date.now(),
-            status: HISTORY_STATUS.SUCCESS,
-            ...res
-          }
+          value: res
         });
       }, async() => {
         await update('history', {

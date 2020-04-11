@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 import { Descriptions, Avatar, Empty, Table, Button, Modal } from 'antd';
 import { mapStateToProps, mapDispatchToProps } from '../common/store';
 import { CodeOutlined } from '@ant-design/icons';
-import { axiosGet } from '../common/axios';
+import { axiosGet, axiosPost } from '../common/axios';
 import { actionIcon } from '../common/common';
 import SnippetModal from '../component/snippetModal';
 import '../style/snippetPage.less';
@@ -95,24 +95,33 @@ class SnippetPage extends Component {
 
   renderFooter = () => {
     const showModal = () => {
-      // if (!this.props.User.id) {
-      //   return Modal.error({
-      //     title: '运行测试代码出错',
-      //     content: '未登录无权进行操作',
-      //     okText: '登录',
-      //     onOk: () => {
-      //       this.props.history.push('/login');
-      //     },
-      //     centered: true
-      //   });
-      // } 
+      if (!this.props.User.id) {
+        return Modal.error({
+          title: '运行测试代码出错',
+          content: '未登录无权进行操作',
+          okText: '登录',
+          onOk: () => {
+            this.props.history.push('/login');
+          },
+          centered: true
+        });
+      } 
       this.setState({
         visible: true
       });
     }
     const {visible, confirmLoading, name} = this.state;
-    const onOk = () =>{
-
+    const onOk = (params) =>{
+      this.setState({confirmLoading: true});
+      axiosPost('/history/addHistory', {
+        snippetId: this.state.id,
+        ...params
+      }).then(res => {
+        this.setState({
+          confirmLoading: false,
+          visible: false
+        });
+      })
     };
     return (
       <div>

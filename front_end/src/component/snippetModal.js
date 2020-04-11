@@ -9,9 +9,11 @@ import {
   Col,
   TimePicker,
   Checkbox,
-  Table
+  Table,
+  Select
 } from 'antd';
 import { actionIcon } from '../common/common'
+import moment from 'moment';
 import './index.less';
 
 const columns = [
@@ -85,6 +87,50 @@ export default class SnippetModal extends Component {
     this.setState({displayTime});
   };
 
+  rowRender = (record, index) => {
+    return (
+      <Form
+        layout="inline"
+        initialValues={record}
+        onFinish={(value) => {
+          const snippet = this.state.snippet;
+          snippet[index] = Object.assign(snippet[index], value);
+          this.setState({snippet});
+        }}
+        hideRequiredMark
+      >
+        <Row>
+          <Col span={8}>
+            <Form.Item
+              label="校验方式"
+              name="check"
+              rules={[{ required: true, message: '请选择校验方式' }]}
+            >  
+              <Select defaultValue={record.check}>
+                <Select.Option value="element">检查元素</Select.Option>
+                <Select.Option value="console">校验输出</Select.Option>
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col span={8} offset={2}>
+            <Form.Item
+              label="校验内容"
+              name="checkValue"
+              rules={[{ required: true, message: '请输入校验内容' }]}
+            >
+              <Input placeholder="请输入校验内容"/>
+            </Form.Item>
+          </Col>
+          <Col span={4} offset={2}>
+            <Form.Item>
+              <Button type="primary" htmlType="submit">Submit</Button>
+            </Form.Item>  
+          </Col>
+        </Row>
+      </Form>
+    );
+  }
+
   render () {
     const { visible, confirmLoading, onOk, onCancel, title } = this.props;
     const { displayTime, snippet } = this.state;
@@ -101,15 +147,51 @@ export default class SnippetModal extends Component {
         className="snippet-modal-container"
         width="80vw"
       >
+        <Table
+          style={{width: '100%'}}
+          columns={columns}
+          dataSource={snippet}
+          locale={{
+            filterTitle: '筛选',
+            filterConfirm: '确定',
+            filterReset: '重置',
+            emptyText: '暂无数据',
+          }}
+          footer={this.renderFooter}
+          expandable={{
+            expandedRowRender: this.rowRender,
+            expandIcon: ({ expanded, onExpand, record }) =>
+              expanded ? (
+                <Button size="small" onClick={e => onExpand(record, e)}>收起添加</Button>
+              ) : (
+                <Button size="small" onClick={e => onExpand(record, e)}>添加校验</Button>
+              )
+          }}
+        />
         <Form
           {...layout}
           name="basic"
           layout="horizontal"
-          onFinish={(v) => console.log(v)}
+          initialValues={{
+            time: moment(new Date(), 'HH:mm:ss'),
+            ...this.state.defaultValue
+          }}
+          onFinish={(result) => {
+            result.time = result.time.format('ss mm HH')
+            const { time, days, cronTime, headless, name } = result;
+            const params = {
+              name,
+              snippet,
+              headless: headless ? true : false,
+              cronTime: cronTime ? '' : `${time} ${days.length ? days.join(',') : '*'} * *`,
+            }; 
+            console.log(params);
+            onOk(params);
+          }}
           hideRequiredMark
         >
           <Row>
-            <Col span={16} offset={1}>
+            <Col span={8}>
               <Form.Item
                 label="名称"
                 name="name"
@@ -118,15 +200,23 @@ export default class SnippetModal extends Component {
                 <Input />
               </Form.Item>
             </Col>
-          </Row>
-          <Row>
-            <Col span={12}>
-              <Form.Item label="是否展示界面" name="headless">
+            <Col span={8}>
+              <Form.Item 
+                label="是否展示界面"
+                name="headless"
+                labelCol={{ span: 16 }}
+                wrapperCol={{ span: 8 }}
+              >
                 <Switch />
               </Form.Item>
             </Col>
-            <Col span={12}>
-              <Form.Item label="是否定时执行" name="headless">
+            <Col span={8}>
+              <Form.Item
+                label="是否定时执行"
+                name="cronTime"
+                labelCol={{ span: 16 }}
+                wrapperCol={{ span: 8 }}
+              >
                 <Switch onChange={this.switchOnChange} />
               </Form.Item>
             </Col>
@@ -181,21 +271,12 @@ export default class SnippetModal extends Component {
               </Form.Item>
             </Col>
           </Row>
-          <Table
-              style={{width: '100%'}}
-              columns={columns}
-              dataSource={snippet}
-              locale={{
-                filterTitle: '筛选',
-                filterConfirm: '确定',
-                filterReset: '重置',
-                emptyText: '暂无数据',
-              }}
-              footer={this.renderFooter}
-            />
+          <Form.Item name="email" label="Email" rules={[{ required: true, type: 'email', message: '请输入正确的邮箱' }]}>
+            <Input placeholder="" />
+          </Form.Item>
           <Form.Item {...tailLayout}>
             <Button type="primary" htmlType="submit">
-              Submit
+              执行代码
             </Button>
           </Form.Item>
         </Form>

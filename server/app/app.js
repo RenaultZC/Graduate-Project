@@ -5,6 +5,7 @@ const koaBody = require('koa-body');
 const env = require('./config/env');
 const analyze = require('./router/analyze');
 const user = require('./router/user');
+const history = require('./router/history');
 const session = require('koa-session');
 const respond = require('koa-respond');
 
@@ -29,7 +30,8 @@ app.use(Cors({
 app.use(koaBody());
 app.use(respond());
 
-router.use('/analyze', analyze.routes(), user.allowedMethods());
+router.use('/analyze', analyze.routes(), analyze.allowedMethods());
+router.use('/history', history.routes(), history.allowedMethods());
 router.use('/user', user.routes(), user.allowedMethods());
 
 app.use(router.routes(), router.allowedMethods());
