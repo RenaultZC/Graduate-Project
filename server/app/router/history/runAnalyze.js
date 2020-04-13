@@ -2,8 +2,14 @@ const puppeteer = require('puppeteer');
 const path = require('path');
 import { makePromiseForExecute } from '../../dao/common';
 
-const insertScreenshot = async(values) => {
-  const query = 'INSERT INTO';
+const insertConsums = async consums => {
+  const query = 'INSERT INTO consum(historyId, action, delay, remarks, status) VALUES ? ';
+  await makePromiseForExecute(query, [consums]);
+};
+
+const insertScreenshot = async screenshots => {
+  const query = 'INSERT INTO screenshot(historyId, path) VALUES ? ';
+  await makePromiseForExecute(query, [screenshots]);
 };
 
 const performance = async(page) => {
@@ -76,7 +82,7 @@ const analyze = async(snippet, historyId, headless, delayTime) => {
   const fileName = path.resolve(`../..${analyzeFile}}`);
   let successTemp = 0;
   let failTemp = 0;
-  const consum = [];
+  const consums = [];
   const urls = {};
   const screenshots = [];
 
@@ -153,7 +159,7 @@ const analyze = async(snippet, historyId, headless, delayTime) => {
       default: break;
     }
     const delay = Date.now() - startTime;
-    consum.push([ historyId, action, delay, selector, null]);
+    consums.push([ historyId, action, delay, selector, null]);
     await page.waitFor(delayTime);
     const screenshotPath = `/static/img/${historyId + i}`;
     await page.screenshot({ path: path.resolve(`../..${screenshotPath}`) });
@@ -167,9 +173,11 @@ const analyze = async(snippet, historyId, headless, delayTime) => {
     const value = urls[v];
     if (typeof value !== typeof{} || !value)  return;
     const remarks = JSON.stringify(value);
-    consum.push([ historyId, 'request', value.delay, remarks, value.status ]);
+    consums.push([ historyId, 'request', value.delay, remarks, value.status ]);
   });
   await browser.close();
+  await insertConsums(consums);
+  await insertScreenshot(screenshots);
   return {
     analyzeData,
     successTemp,
