@@ -1,22 +1,24 @@
 import drop from '../../dao/drop';
 import update from '../../dao/update';
-import select from '../../dao/select';
 import runAnalyze from './runAnalyze';
 import { HISTORY_STATUS } from '../../config/common';
 
-export default async({ historyId, snippetId, headless }) => {
+export default async({ name, historyId, snippet, delayTime, email, headless, cronTime }) => {
   await drop('consum', { historyId });
   await drop('screenshot', { historyId });
 
-  let [res] = await select('snippet', { id: snippetId });
-  const { snippet } = res[0];
-  [res] = await update('history', {
+  const [res] = await update('history', {
     search: {
       id: historyId
     },
     value: {
       startTime: Date.now(),
       status: HISTORY_STATUS.RUNNING,
+      snippet,
+      cronTime,
+      name,
+      delayTime,
+      email,
       endTime: '',
       successTemp: -1,
       failTemp: -1,

@@ -7,7 +7,8 @@ const eventsToRecord = {
   SELECT: 'select',
   SUBMIT: 'submit',
   LOAD: 'load',
-  UNLOAD: 'unload'
+  UNLOAD: 'unload',
+  MOUSEMOVE: 'mousemove',
 }  
 class EventRecorder {
   constructor () {
@@ -37,7 +38,11 @@ class EventRecorder {
   addAllListeners (events) {
     const boundedRecordEvent = this.recordEvent.bind(this)
     events.forEach(type => {
-      window.addEventListener(type, boundedRecordEvent, true)
+      if (type === 'mousemove'){
+        window.addEventListener(type, this.debounce(boundedRecordEvent, 1000), true)
+      } else {
+        window.addEventListener(type, boundedRecordEvent, true)
+      }
     })
   }
 
@@ -54,10 +59,19 @@ class EventRecorder {
     }
   }
 
+  debounce(fn, interval = 300) {
+    let timeout = null;
+    return function () {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        fn.apply(this, arguments);
+      }, interval);
+    };
+  }
+
   recordEvent (e) {
     if (this.previousEvent && this.previousEvent.timeStamp === e.timeStamp) return
     this.previousEvent = e
-
     try {
       const selector = this.dataAttribute && e.target.hasAttribute && e.target.hasAttribute(this.dataAttribute)
         ? formatDataSelector(e.target, this.dataAttribute)
@@ -65,12 +79,16 @@ class EventRecorder {
 
       const msg = {
         selector: selector,
-        value: e.target.value,
-        tagName: e.target.tagName,
+        value: e.target && e.target.value,
+        tagName: e.target && e.target.tagName,
         action: e.type,
         keyCode: e.keyCode ? e.keyCode : null,
         href: e.target.href ? e.target.href : null,
-        coordinates: getCoordinates(e)
+        coordinates: getCoordinates(e),
+        clientRect: {
+          x: e.clientX,
+          y: e.clientY
+        }
       }
       this.sendMessage(msg)
     } catch (e) { }
