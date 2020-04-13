@@ -10,7 +10,8 @@ import {
   TimePicker,
   Checkbox,
   Table,
-  Select
+  Select,
+  InputNumber
 } from 'antd';
 import { actionIcon } from '../common/common'
 import moment from 'moment';
@@ -112,7 +113,7 @@ export default class SnippetModal extends Component {
               </Select>
             </Form.Item>
           </Col>
-          <Col span={8} offset={2}>
+          <Col span={10} offset={1}>
             <Form.Item
               label="校验内容"
               name="checkValue"
@@ -121,9 +122,9 @@ export default class SnippetModal extends Component {
               <Input placeholder="请输入校验内容"/>
             </Form.Item>
           </Col>
-          <Col span={4} offset={2}>
+          <Col span={4} offset={1}>
             <Form.Item>
-              <Button type="primary" htmlType="submit">Submit</Button>
+              <Button type="primary" htmlType="submit">保存</Button>
             </Form.Item>  
           </Col>
         </Row>
@@ -174,6 +175,7 @@ export default class SnippetModal extends Component {
           layout="horizontal"
           initialValues={{
             time: moment(new Date(), 'HH:mm:ss'),
+            delayTime: 0,
             ...this.state.defaultValue
           }}
           onFinish={(result) => {
@@ -181,11 +183,10 @@ export default class SnippetModal extends Component {
             const { time, days, cronTime, headless, name } = result;
             const params = {
               name,
-              snippet,
+              snippet: JSON.stringify(this.state.snippet),
               headless: headless ? true : false,
-              cronTime: cronTime ? '' : `${time} ${days.length ? days.join(',') : '*'} * *`,
-            }; 
-            console.log(params);
+              cronTime: cronTime ? `${time} ${days.length ? days.join(',') : '*'} * *` : '',
+            };
             onOk(params);
           }}
           hideRequiredMark
@@ -197,7 +198,7 @@ export default class SnippetModal extends Component {
                 name="name"
                 rules={[{ required: true, message: '请输入运行名称' }]}
               >
-                <Input />
+                <Input placeholder="输入运行代码名称" />
               </Form.Item>
             </Col>
             <Col span={8}>
@@ -271,9 +272,39 @@ export default class SnippetModal extends Component {
               </Form.Item>
             </Col>
           </Row>
-          <Form.Item name="email" label="Email" rules={[{ required: true, type: 'email', message: '请输入正确的邮箱' }]}>
-            <Input placeholder="" />
-          </Form.Item>
+          <Row>
+            <Col span={12}>
+              <Form.Item
+                name="email"
+                label="通知邮箱"
+                rules={[
+                  {
+                    required: true,
+                    pattern: /^([\w+-.%]+@[\w-.]+\.[A-Za-z]{2,4},?)+$/,
+                    message: '请输入正确的邮箱' 
+                  }
+                ]}
+                labelCol={{ span: 5 }}
+                wrapperCol={{ span: 19 }}
+              >
+                <Input placeholder="输入通知邮箱以逗号分隔" />
+              </Form.Item>
+            </Col>
+            <Col>
+              <Form.Item
+                name="delayTime"
+                label="执行时延"
+                labelCol={{ span: 14 }}
+                wrapperCol={{ span: 10}}
+              >
+                <InputNumber
+                  min={0}
+                  formatter={value => `${value}ms`}
+                  parser={value => value.replace('ms', '')}
+                />
+              </Form.Item>
+            </Col>
+          </Row>
           <Form.Item {...tailLayout}>
             <Button type="primary" htmlType="submit">
               执行代码

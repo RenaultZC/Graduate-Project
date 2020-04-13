@@ -1,29 +1,28 @@
-import insert from '../../dao/insert';
+import drop from '../../dao/drop';
 import update from '../../dao/update';
+import select from '../../dao/select';
 import runAnalyze from './runAnalyze';
 import { HISTORY_STATUS } from '../../config/common';
 
+export default async({ historyId, snippetId, headless }) => {
+  await drop('consum', { historyId });
+  await drop('screenshot', { historyId });
 
-module.exports = async ctx => {
-  const { snippetId, name, headless, snippet, cronTime, delayTime, email } = ctx.request.body;
-  if (!ctx.session.id)
-    return ctx.unauthorized({ error: true, errCode: 1003 });
-  const startTime =  Date.now();
-  const [res] = await insert('history', {
-    userId: ctx.session.id,
-    snippetId,
-    startTime,
-    status: HISTORY_STATUS.RUNNING,
-    name,
-    snippet,
-    cronTime,
-    delayTime,
-    email,
-    endTime: '',
-    successTemp: 0,
-    failTemp: 0,
-    analyzeFile: '',
-    analyzeData: '',
+  let [res] = await select('snippet', { id: snippetId });
+  const { snippet } = res[0];
+  [res] = await update('history', {
+    search: {
+      id: historyId
+    },
+    value: {
+      startTime: Date.now(),
+      status: HISTORY_STATUS.RUNNING,
+      endTime: '',
+      successTemp: -1,
+      failTemp: -1,
+      analyzeFile: '',
+      analyzeData: '',
+    }
   });
   if (res.affectedRows) {
     const historyId = res.insertId;
@@ -48,10 +47,7 @@ module.exports = async ctx => {
           }
         });
       });
-    return ctx.ok({
-      error: false,
-      msg: '执行成功'
-    });
+    return true;
   }
-  return ctx.notFound({ error: true, errCode: 1007 });
+  return false;
 };

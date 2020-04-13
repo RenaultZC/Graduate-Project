@@ -8,6 +8,7 @@ const user = require('./router/user');
 const history = require('./router/history');
 const session = require('koa-session');
 const respond = require('koa-respond');
+import Cron from './common/crontime';
 
 const CONFIG = {
   key: 'SESSION',
@@ -33,6 +34,7 @@ app.use(respond());
 router.use('/analyze', analyze.routes(), analyze.allowedMethods());
 router.use('/history', history.routes(), history.allowedMethods());
 router.use('/user', user.routes(), user.allowedMethods());
+Cron.init();
 
 app.use(router.routes(), router.allowedMethods());
 

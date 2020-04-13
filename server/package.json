@@ -34,5 +34,8 @@
     "loadsh": "^0.0.4",
     "mysql2": "^2.1.0",
     "puppeteer": "^1.15.0"
+  },
+  "dependencies": {
+    "node-cron": "^2.0.3"
   }
 }
