@@ -13,19 +13,13 @@ router.get('/getAnalyze', async ctx => {
 
 router.get('/getAllAnalyze', async ctx => {
   const [res] = await select('snippet');
-  if (res.length) {
-    return ctx.ok({ error: false, msg: res });
-  }
-  return ctx.notFound({ error: true, errCode: 1007 });
+  return ctx.ok({ error: false, msg: res });
 });
 
 router.get('/selectAnalyze', async ctx => {
   const { query } = ctx.request;
   const [res] = await select('snippet', query, true);
-  if (res.length) {
-    return ctx.ok({ error: false, msg: res });
-  }
-  return ctx.notFound({ error: true, errCode: 1007 });
+  return ctx.ok({ error: false, msg: res });
 });
 
 module.exports = router;

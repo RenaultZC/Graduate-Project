@@ -12,7 +12,6 @@ class Corn {
     makePromiseForQuery(query).then(([res]) => {
       if (!res.length) return;
       res.forEach(v => {
-        console.log(v.id, v.cronTime);
         this.start(v.id, v.cronTime, v);
       });
     });

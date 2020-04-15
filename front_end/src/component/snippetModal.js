@@ -17,6 +17,7 @@ import { actionIcon } from '../common/common'
 import moment from 'moment';
 import { connect } from 'react-redux';
 import './index.less';
+import { PlusCircleOutlined, MinusCircleOutlined } from '@ant-design/icons';
 
 const columns = [
   {
@@ -80,8 +81,14 @@ const mapStateToProps = (state, ownProps) => {
   if (!ownProps.defaultValue || !ownProps.defaultValue.cronTime) return {};
   const cronTime = ownProps.defaultValue.cronTime.split(' ');
   const time = moment(`${cronTime[2]}:${cronTime[1]}:${cronTime[0]}`, 'HH:mm:ss');
+  const days = cronTime[3] === '*' ? [ '1' , '2', '3', '4', '5', '6', '7' ] : cronTime[3].split(',');
   return {
-    time,
+    defaultValue: {
+      ...ownProps.defaultValue,
+      time,
+      days,
+      cronTime: true
+    }
   }
 }
 
@@ -90,7 +97,7 @@ export default class SnippetModal extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      displayTime: false,
+      displayTime: this.props.defaultValue && this.props.defaultValue.cronTime ? true : false,
       snippet: this.props.snippet,
       defaultValue: this.props.defaultValue
     };
@@ -119,7 +126,7 @@ export default class SnippetModal extends Component {
               name="check"
               rules={[{ required: true, message: '请选择校验方式' }]}
             >  
-              <Select defaultValue={record.check}>
+              <Select>
                 <Select.Option value="element">检查元素</Select.Option>
                 <Select.Option value="console">校验输出</Select.Option>
               </Select>
@@ -175,9 +182,9 @@ export default class SnippetModal extends Component {
             expandedRowRender: this.rowRender,
             expandIcon: ({ expanded, onExpand, record }) =>
               expanded ? (
-                <Button size="small" onClick={e => onExpand(record, e)}>收起添加</Button>
+                <Button icon={<MinusCircleOutlined />} size="small" shape="round"  onClick={e => onExpand(record, e)}>收起</Button>
               ) : (
-                <Button size="small" onClick={e => onExpand(record, e)}>添加校验</Button>
+                <Button icon={<PlusCircleOutlined />} size="small" shape="round"  onClick={e => onExpand(record, e)}>校验</Button>
               )
           }}
         />
@@ -192,12 +199,14 @@ export default class SnippetModal extends Component {
           }}
           onFinish={(result) => {
             result.time = result.time.format('ss mm HH')
-            const { time, days, cronTime, headless, name } = result;
+            const { time, days, cronTime, headless, name, email, delayTime } = result;
             const params = {
               name,
               snippet: JSON.stringify(this.state.snippet),
               headless: headless ? true : false,
               cronTime: cronTime ? `${time} ${days.length ? days.join(',') : '*'} * *` : '',
+              email,
+              delayTime
             };
             onOk(params);
           }}
@@ -219,6 +228,7 @@ export default class SnippetModal extends Component {
                 name="headless"
                 labelCol={{ span: 16 }}
                 wrapperCol={{ span: 8 }}
+                valuePropName="checked"
               >
                 <Switch />
               </Form.Item>
@@ -229,6 +239,7 @@ export default class SnippetModal extends Component {
                 name="cronTime"
                 labelCol={{ span: 16 }}
                 wrapperCol={{ span: 8 }}
+                valuePropName="checked"
               >
                 <Switch onChange={this.switchOnChange} />
               </Form.Item>

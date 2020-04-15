@@ -24,7 +24,6 @@ class History extends Component {
         v.snippet = JSON.parse(v.snippet);
         return v;
       })
-      console.log(historyData);
       historyData = historyData.concat(historyData);
       historyData = historyData.concat(historyData);
       historyData = historyData.concat(historyData);
@@ -73,9 +72,6 @@ class History extends Component {
           itemLayout="vertical"
           size="large"
           pagination={{
-            onChange: page => {
-              console.log(page);
-            },
             pageSize: 3,
           }}
           dataSource={this.state.historyData}

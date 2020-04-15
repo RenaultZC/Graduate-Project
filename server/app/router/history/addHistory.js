@@ -2,6 +2,7 @@ import insert from '../../dao/insert';
 import update from '../../dao/update';
 import runAnalyze from './runAnalyze';
 import { HISTORY_STATUS } from '../../config/common';
+import Cron from '../../common/crontime';
 
 
 module.exports = async ctx => {
@@ -47,6 +48,10 @@ module.exports = async ctx => {
             status: HISTORY_STATUS.FAILED
           }
         });
+      }).finally(() => {
+        if (cronTime) {
+          Cron.start(historyId, cronTime, { name, headless, snippet, cronTime, delayTime, email, historyId });
+        }
       });
     return ctx.ok({
       error: false,

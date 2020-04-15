@@ -51,7 +51,6 @@ const performance = async(page) => {
 const handleKeyDown = async(page, selector, value) => {
   await page.waitForSelector(selector);
   await page.$eval(selector, el => {
-    console.log(el.value);
     el.value = '';
   });
   await page.type(selector, value);
@@ -111,7 +110,7 @@ const analyze = async(snippet, historyId, headless, delayTime) => {
   });
 
   await page.tracing.start({ path: fileName });
-
+console.log(event.value)
   for (let i = 0, len = event.value.length; i < len; i++) {
     const startTime = Date.now();
     const { action, selector, value, tagName, frameId, frameUrl, clientRect } = event.value[i];

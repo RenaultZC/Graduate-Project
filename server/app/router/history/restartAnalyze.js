@@ -2,6 +2,7 @@ import drop from '../../dao/drop';
 import update from '../../dao/update';
 import runAnalyze from './runAnalyze';
 import { HISTORY_STATUS } from '../../config/common';
+import Cron from '../../common/crontime';
 
 export default async({ name, historyId, snippet, delayTime, email, headless, cronTime }) => {
   await drop('consum', { historyId });
@@ -20,15 +21,14 @@ export default async({ name, historyId, snippet, delayTime, email, headless, cro
       delayTime,
       email,
       endTime: '',
-      successTemp: -1,
-      failTemp: -1,
+      successTemp: 0,
+      failTemp: 0,
       analyzeFile: '',
       analyzeData: '',
     }
   });
   if (res.affectedRows) {
-    const historyId = res.insertId;
-    new Promise(() => runAnalyze(snippet, historyId, headless))
+    new Promise(() => runAnalyze(snippet, historyId, headless, delayTime))
       .then(async res => {
         res.endTime = Date.now();
         res.status = HISTORY_STATUS.SUCCESS;
@@ -48,6 +48,12 @@ export default async({ name, historyId, snippet, delayTime, email, headless, cro
             status: HISTORY_STATUS.FAILED
           }
         });
+      }).finally(() => {
+        if (cronTime) {
+          Cron.start(historyId, cronTime, { name, headless, snippet, cronTime, delayTime, email, historyId });
+        } else {
+          Cron.stop(historyId);
+        }
       });
     return true;
   }
