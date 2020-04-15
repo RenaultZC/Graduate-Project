@@ -68,12 +68,12 @@ class SnippetPage extends Component {
       id: null,
       snippet: null,
       name: null,
-      visible: true,
+      visible: false,
       confirmLoading: false
     }
   }
 
-  componentWillMount() {
+  componentDidMount() {
     const id = this.props.match.params.id;
     this.setState({id})
     this.props.changeLoading(true);

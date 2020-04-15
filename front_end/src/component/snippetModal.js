@@ -15,6 +15,7 @@ import {
 } from 'antd';
 import { actionIcon } from '../common/common'
 import moment from 'moment';
+import { connect } from 'react-redux';
 import './index.less';
 
 const columns = [
@@ -75,12 +76,23 @@ const tailLayout = {
   wrapperCol: { offset: 10, span: 16 },
 };
 
+const mapStateToProps = (state, ownProps) => {
+  if (!ownProps.defaultValue || !ownProps.defaultValue.cronTime) return {};
+  const cronTime = ownProps.defaultValue.cronTime.split(' ');
+  const time = moment(`${cronTime[2]}:${cronTime[1]}:${cronTime[0]}`, 'HH:mm:ss');
+  return {
+    time,
+  }
+}
+
+@connect(mapStateToProps)
 export default class SnippetModal extends Component {
   constructor (props) {
     super(props);
     this.state = {
       displayTime: false,
-      snippet: this.props.snippet
+      snippet: this.props.snippet,
+      defaultValue: this.props.defaultValue
     };
   }
 

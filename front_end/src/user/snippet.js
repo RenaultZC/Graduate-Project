@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { List, Avatar, Empty } from 'antd';
+import { List, Avatar, Input } from 'antd';
 import { ClockCircleOutlined, CodeOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
@@ -29,7 +29,9 @@ class Snippet extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      snippetData: []
+      snippetData: [],
+      queryParams: '',
+      searchOnload: false,
     };
   }
 
@@ -48,18 +50,40 @@ class Snippet extends Component {
         snippetData
       })
       if (this.props.changeLoading) this.props.changeLoading(false);
-      console.log(snippetData)
     })
   }
 
+  renderHeader = () => {
+    const onSearch = (name) => {
+      this.setState({searchOnload: true});
+      axiosGet('/analyze/findAnalyze/selectAnalyze', { name }).then(res => {
+        let snippetData = res.data.msg.map(v => {
+          v.snippet = JSON.parse(v.snippet);
+          return v;
+        })
+        snippetData = snippetData.concat(snippetData);
+        snippetData = snippetData.concat(snippetData);
+        snippetData = snippetData.concat(snippetData);
+        snippetData = snippetData.concat(snippetData);
+        this.setState({
+          snippetData,
+          searchOnload: false
+        })
+      })
+    }
+    return (
+      <div>
+        <Input.Search
+          enterButton
+          placeholder="搜索测试代码"
+          onSearch={onSearch}
+          loading={this.state.searchOnload}
+        />
+      </div>
+    );
+  }
+
   render() {
-    const { snippetData } = this.state;
-    if (!snippetData.length) 
-      return(
-        <div className="snippet-container empty-container">
-          <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="暂无数据"/>
-        </div>
-      );
     return (
       <div className="snippet-container">
         <List
@@ -100,6 +124,7 @@ class Snippet extends Component {
                 {item.content}
               </List.Item>
           )}}
+          header={this.renderHeader()}
         />
       </div>
     );

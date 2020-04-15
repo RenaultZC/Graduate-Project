@@ -10,6 +10,7 @@ import {
   LogoutOutlined,
   DesktopOutlined
 } from '@ant-design/icons';
+import { Badge } from 'antd';
 
 export const actionIcon = {
   'goto*': () => <div><LoginOutlined /> 前往</div>,
@@ -23,3 +24,9 @@ export const actionIcon = {
   'load': () => <div><LoadingOutlined /> 载入</div>,
   'unload': () => <div><LogoutOutlined /> 卸载</div>
 }
+
+export const StatusBadge = {
+  0: <Badge status="processing" text="运行中" />,
+  1: <Badge status="success" text="运行成功" />,
+  2: <Badge status="error" text="运行失败" />
+};

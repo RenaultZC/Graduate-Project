@@ -6,6 +6,8 @@ import Home from './user/home';
 import Login from './user/login';
 import Snippet from './user/snippet';
 import SnippetPage from './user/snippetPage';
+import History from './user/history';
+import HistoryPage from './user/historyPage';
 import Head from './head';
 import './style/index.less';
 
@@ -18,8 +20,10 @@ class App extends Component {
         <Switch>
           <Route path="/" exact component={Home}/>
           <Route path="/login" exact component={Login} />
-          <Route path="/Snippet" exact component={Snippet} />
-          <Route path="/Snippet/:id" exact component={SnippetPage} />
+          <Route path="/snippet" exact component={Snippet} />
+          <Route path="/snippet/:id" exact component={SnippetPage} />
+          <Route path="/history" exact component={History} />
+          <Route path="/history/:id" exact component={HistoryPage} />
           <Route path="*" component={NotFound}/>
         </Switch>
         <div className="footer-container">

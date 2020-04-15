@@ -1,14 +1,25 @@
 .snippet-container {
-  width: 80%;
+  width: 60vw;
   margin: 16px auto;
   background-color: #fff;
   border: 1px solid #f0f0f0;
   border-radius: 2px;
-  padding: 42px 24px 20px;
+  padding: 20px 24px;
   min-height: 75vh;
   &.empty-container {  
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+  & .ant-list-header {
+    padding-top: 0;
+  }
+  & .ant-descriptions-row:nth-child(4) .ant-descriptions-item-content {
+    padding: 16px 24px;
+  }
+}
+@media only screen and (max-width: 1024px) {
+  .snippet-container {
+    width: 80vw;
   }
 }
