@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { withRouter } from 'react-router-dom';
 import { StatusBadge } from '../common/common';
+import { ChromeFilled } from '@ant-design/icons';
 
 @connect(null, mapDispatchToProps)
 @withRouter
@@ -51,6 +52,8 @@ class History extends Component {
           historyData,
           searchOnload: false
         })
+      }, err => {
+        
       })
     }
     return (
@@ -89,15 +92,16 @@ class History extends Component {
                   StatusBadge[item.status]
                 ]}
                 extra={
-                  <img
-                    width={100}
+                  <Avatar
+                    style={{width: '100px', height: '100px'}}
                     alt="logo"
                     src={avatar}
+                    icon={<ChromeFilled />} 
                   />
                 }
               >
                 <List.Item.Meta
-                  avatar={<Avatar src={avatar} />}
+                  avatar={<Avatar src={avatar} icon={<ChromeFilled />} />}
                   title={<NavLink to={`/history/${item.id}`}>{item.name}</NavLink>}
                   description={`测试网址: ${origin}`}
                 />

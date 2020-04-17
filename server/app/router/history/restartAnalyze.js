@@ -28,10 +28,22 @@ export default async({ name, historyId, snippet, delayTime, email, headless, cro
     }
   });
   if (res.affectedRows) {
-    new Promise(() => runAnalyze(snippet, historyId, headless, delayTime))
+    new Promise((resolve, reject) => {
+      try {
+        runAnalyze(snippet, historyId, headless, delayTime).then(res => {
+          resolve(res);
+        }, err => {
+          reject(err);
+        });
+      } catch (e) {
+        reject(e);
+      }
+    })
       .then(async res => {
-        res.endTime = Date.now();
-        res.status = HISTORY_STATUS.SUCCESS;
+        res = Object.assign({
+          endTime: Date.now(),
+          status: HISTORY_STATUS.SUCCESS
+        }, res);
         await update('history', {
           search: {
             id: historyId

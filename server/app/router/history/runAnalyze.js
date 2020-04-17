@@ -1,15 +1,15 @@
 const puppeteer = require('puppeteer');
 const path = require('path');
-import { makePromiseForExecute } from '../../dao/common';
+import { makePromiseForQuery } from '../../dao/common';
 
 const insertConsums = async consums => {
-  const query = 'INSERT INTO consum(historyId, action, delay, remarks, status) VALUES ? ';
-  await makePromiseForExecute(query, [consums]);
+  const query = 'INSERT INTO consum(historyId, action, delay, remarks, status) VALUES ?';
+  await makePromiseForQuery(query, [consums]);
 };
 
 const insertScreenshot = async screenshots => {
-  const query = 'INSERT INTO screenshot(historyId, path) VALUES ? ';
-  await makePromiseForExecute(query, [screenshots]);
+  const query = 'INSERT INTO screenshot(historyId, path) VALUES ?';
+  await makePromiseForQuery(query, [screenshots]);
 };
 
 const performance = async(page) => {
@@ -57,8 +57,13 @@ const handleKeyDown = async(page, selector, value) => {
 };
 
 const handleClick = async(page, selector, clientRect) => {
-  const { x, y } = clientRect;
-  await page.mouse.click(x, y);
+  if (clientRect) {
+    const { x, y } = clientRect;
+    await page.mouse.click(x, y);
+  } else {
+    await page.waitForSelector(selector);
+    await page.click(selector);
+  }
 };
 
 const handleGoto = async(page, href) => {
@@ -74,17 +79,19 @@ const analyze = async(snippet, historyId, headless, delayTime) => {
   const frame = {
     frameId: 0
   };
-  const browser = await puppeteer.launch({ headless });
+  headless = !headless;
+  const browser = await puppeteer.launch({ headless, args: ['--start-maximized'] });
   frame['0'] = await browser.newPage();
   let page = frame['0'];
-  const analyzeFile = `/static/file/${historyId + Date.now()}`;
-  const fileName = path.resolve(`../..${analyzeFile}}`);
+  const analyzeFile = `/static/file/${historyId}.json`;
+  const fileName = path.resolve(__dirname, `../..${analyzeFile}`);
+  console.log(fileName);
   let successTemp = 0;
   let failTemp = 0;
   const consums = [];
   const urls = {};
   const screenshots = [];
-
+  const consoles = [];
   page.on('request', async(request) => {
     if (/^https{0,1}:\/\//.test(request.url())) {
       urls[request.url()] = Date.now();
@@ -99,7 +106,7 @@ const analyze = async(snippet, historyId, headless, delayTime) => {
         url: responseUrl,
         status: response.status(),
         fromCache: response.fromCache(),
-        fromServiceCache: response.fromServiceCache(),
+        fromServiceWorker: response.fromServiceWorker(),
       };
       if (response.ok()) {
         successTemp++;
@@ -110,10 +117,16 @@ const analyze = async(snippet, historyId, headless, delayTime) => {
   });
 
   await page.tracing.start({ path: fileName });
-console.log(event.value)
-  for (let i = 0, len = event.value.length; i < len; i++) {
+  page.on('console', async msg => {
+    const res = [];
+    for (let i = 0; i < msg.args().length; ++i)
+      res.push(await msg.args()[i].jsonValue());
+    consoles.push(res.join(','));
+  });
+
+  for (let i = 0, len = event.length; i < len; i++) {
     const startTime = Date.now();
-    const { action, selector, value, tagName, frameId, frameUrl, clientRect } = event.value[i];
+    const { action, selector, value, tagName, frameId, frameUrl, clientRect, check, checkValue } = event[i];
     const { x, y } = clientRect || {};
     let selectorArr = [];
 
@@ -158,10 +171,28 @@ console.log(event.value)
       default: break;
     }
     const delay = Date.now() - startTime;
-    consums.push([ historyId, action, delay, selector, null]);
+    event[i].delay = delay;
     await page.waitFor(delayTime);
-    const screenshotPath = `/static/img/${historyId + i}`;
-    await page.screenshot({ path: path.resolve(`../..${screenshotPath}`) });
+    switch (check) {
+      case 'element':
+        try {
+          await page.waitForSelector(checkValue);
+          event[i].result = true;
+        } catch (e) {
+          event[i].result = false;
+        }
+        break;
+      case 'console':
+        if (consoles[consoles.length - 1] === checkValue) {
+          event[i].result = true;
+        } else {
+          event[i].result = false;
+        }
+        break;
+      default: break;
+    }
+    const screenshotPath = `/static/img/${historyId}_${i}.png`;
+    await page.screenshot({ path: path.resolve(__dirname, `../..${screenshotPath}`), fullPage: true });
     screenshots.push([ historyId, screenshotPath ]);
   }
 
@@ -178,10 +209,11 @@ console.log(event.value)
   await insertConsums(consums);
   await insertScreenshot(screenshots);
   return {
-    analyzeData,
+    analyzeData: JSON.stringify(analyzeData),
     successTemp,
     failTemp,
-    analyzeFile
+    analyzeFile,
+    snippet: JSON.stringify(event),
   };
 };
 

@@ -27,6 +27,6 @@ export const actionIcon = {
 
 export const StatusBadge = {
   0: <Badge status="processing" text="运行中" />,
-  1: <Badge status="success" text="运行成功" />,
-  2: <Badge status="error" text="运行失败" />
+  1: <Badge status="success" text="测试成功" />,
+  2: <Badge status="error" text="测试失败" />
 };

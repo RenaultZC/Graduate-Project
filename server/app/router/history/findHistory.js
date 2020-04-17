@@ -12,8 +12,8 @@ router.get('/getHistory', async ctx => {
     const [screenshotRes] = await select('screenshot', { historyId });
     const [user] = await select('user', { id: res.userId });
     const [snippet] = await select('snippet', { id: res.snippetId });
-    res.consumData = consumRes[0];
-    res.screenshotData = screenshotRes[0];
+    res.consumData = consumRes;
+    res.screenshotData = screenshotRes;
     res.userData = {
       email: user[0].email,
       username: user[0].username,

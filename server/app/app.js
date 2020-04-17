@@ -8,6 +8,8 @@ const user = require('./router/user');
 const history = require('./router/history');
 const session = require('koa-session');
 const respond = require('koa-respond');
+const path = require('path');
+const koaStatic = require('koa-static-router');
 import Cron from './common/crontime';
 
 const CONFIG = {
@@ -24,6 +26,12 @@ const app = new Koa();
 const router = new Router();
 
 app.keys = ['HASH123'];
+const staticPath = './static';
+
+app.use(koaStatic({
+  dir: path.join(__dirname,  staticPath),
+  router: '/static/'
+}));
 app.use(session(CONFIG, app));
 app.use(Cors({
   credentials: true,

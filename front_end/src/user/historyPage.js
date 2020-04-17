@@ -7,7 +7,9 @@ import { CodeOutlined, UserOutlined } from '@ant-design/icons';
 import { axiosGet, axiosPost } from '../common/axios';
 import { SERVER_HOST } from '../common/config';
 import { StatusBadge } from '../common/common';
+import errCode from '../common/errorCode';
 import SnippetModal from '../component/snippetModal';
+import SnippetTab from './historyPage/snippetTab';
 import '../style/historyPage.less';
 
 const { TabPane } = Tabs;
@@ -82,6 +84,18 @@ class HistoryPage extends Component {
         this.setState({
           confirmLoading: false,
           visible: false
+        });
+        Modal.success({
+          content: res.data.msg,
+          centered: true
+        });
+      },
+      err => {
+        const content  = errCode[err.response.data.errCode];
+        Modal.error({
+          title: '重新执行测试代码',
+          content,
+          centered: true
         });
       })
     };
@@ -172,6 +186,7 @@ class HistoryPage extends Component {
       delayTime,
       cronTime,
     } = historyData;
+    console.log(endTime)
     const url = new URL(snippet[0].value);
     const origin = url.origin;
     const src = userData.avatar ? '' : (SERVER_HOST + userData.avatar);
@@ -223,7 +238,7 @@ class HistoryPage extends Component {
           className="histroyTabs"
         >
           <TabPane tab="执行代码" key="1">
-            Content of Tab 1
+            <SnippetTab snippet={snippet} />
           </TabPane>
           <TabPane tab="执行分析" key="2">
             Content of Tab 2

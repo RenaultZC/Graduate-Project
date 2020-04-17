@@ -7,6 +7,7 @@ import { CodeOutlined } from '@ant-design/icons';
 import { axiosGet, axiosPost } from '../common/axios';
 import { actionIcon } from '../common/common';
 import SnippetModal from '../component/snippetModal';
+import errCode from '../common/errorCode';
 import '../style/snippetPage.less';
 
 const columns = [
@@ -120,6 +121,18 @@ class SnippetPage extends Component {
         this.setState({
           confirmLoading: false,
           visible: false
+        });
+        Modal.success({
+          content: res.data.msg,
+          centered: true
+        });
+      },
+      err => {
+        const content  = errCode[err.response.data.errCode];
+        Modal.error({
+          title: '重新执行测试代码',
+          content,
+          centered: true
         });
       })
     };
