@@ -40,10 +40,7 @@ export default async({ name, historyId, snippet, delayTime, email, headless, cro
       }
     })
       .then(async res => {
-        res = Object.assign({
-          endTime: Date.now(),
-          status: HISTORY_STATUS.SUCCESS
-        }, res);
+        res.endTime = Date.now();
         await update('history', {
           search: {
             id: historyId

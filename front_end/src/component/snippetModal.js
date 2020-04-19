@@ -13,11 +13,11 @@ import {
   Select,
   InputNumber
 } from 'antd';
+import { PlusCircleOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import { actionIcon } from '../common/common'
 import moment from 'moment';
 import { connect } from 'react-redux';
 import './index.less';
-import { PlusCircleOutlined, MinusCircleOutlined } from '@ant-design/icons';
 
 const columns = [
   {
@@ -204,7 +204,7 @@ export default class SnippetModal extends Component {
               name,
               snippet: JSON.stringify(this.state.snippet),
               headless: headless ? true : false,
-              cronTime: cronTime ? `${time} ${days.length ? days.join(',') : '*'} * *` : '',
+              cronTime: cronTime ? `${time} ${days.length ? days.sort((a, b) => a - b).join(',') : '*'} * *` : '',
               email,
               delayTime
             };

@@ -1,5 +1,6 @@
 const puppeteer = require('puppeteer');
 const path = require('path');
+import { HISTORY_STATUS } from '../../config/common';
 import { makePromiseForQuery } from '../../dao/common';
 
 const insertConsums = async consums => {
@@ -83,9 +84,8 @@ const analyze = async(snippet, historyId, headless, delayTime) => {
   const browser = await puppeteer.launch({ headless, args: ['--start-maximized'] });
   frame['0'] = await browser.newPage();
   let page = frame['0'];
-  const analyzeFile = `/static/file/${historyId}.json`;
-  const fileName = path.resolve(__dirname, `../..${analyzeFile}`);
-  console.log(fileName);
+  const analyzeFile = `/file/${historyId}.json`;
+  const fileName = path.resolve(__dirname, `../../static${analyzeFile}`);
   let successTemp = 0;
   let failTemp = 0;
   const consums = [];
@@ -107,6 +107,7 @@ const analyze = async(snippet, historyId, headless, delayTime) => {
         status: response.status(),
         fromCache: response.fromCache(),
         fromServiceWorker: response.fromServiceWorker(),
+        method: response.request().method()
       };
       if (response.ok()) {
         successTemp++;
@@ -123,6 +124,7 @@ const analyze = async(snippet, historyId, headless, delayTime) => {
       res.push(await msg.args()[i].jsonValue());
     consoles.push(res.join(','));
   });
+  let runStatus = HISTORY_STATUS.SUCCESS;
 
   for (let i = 0, len = event.length; i < len; i++) {
     const startTime = Date.now();
@@ -187,12 +189,13 @@ const analyze = async(snippet, historyId, headless, delayTime) => {
           event[i].result = true;
         } else {
           event[i].result = false;
+          runStatus = HISTORY_STATUS.FAILED;
         }
         break;
       default: break;
     }
-    const screenshotPath = `/static/img/${historyId}_${i}.png`;
-    await page.screenshot({ path: path.resolve(__dirname, `../..${screenshotPath}`), fullPage: true });
+    const screenshotPath = `/img/${historyId}_${i}.png`;
+    await page.screenshot({ path: path.resolve(__dirname, `../../static${screenshotPath}`), fullPage: true });
     screenshots.push([ historyId, screenshotPath ]);
   }
 
@@ -214,6 +217,7 @@ const analyze = async(snippet, historyId, headless, delayTime) => {
     failTemp,
     analyzeFile,
     snippet: JSON.stringify(event),
+    status: runStatus
   };
 };
 

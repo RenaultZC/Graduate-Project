@@ -10,6 +10,9 @@ import { StatusBadge } from '../common/common';
 import errCode from '../common/errorCode';
 import SnippetModal from '../component/snippetModal';
 import SnippetTab from './historyPage/snippetTab';
+import ScreenshotTab from './historyPage/screenshotTab';
+import RequestTab from './historyPage/requestTab';
+import PerformanceTab from './historyPage/performanceTab';
 import '../style/historyPage.less';
 
 const { TabPane } = Tabs;
@@ -101,8 +104,8 @@ class HistoryPage extends Component {
     };
     return (
       <div>
-        <Row className="historyPageButton">
-          <Col offset={19} span={5}>
+        <Row className="historyPageButton" justify="end">
+          <Col>
             <Button icon={<CodeOutlined/>} size="large" type="primary" shape="round"  onClick={showModal}>重新测试</Button>
           </Col>
         </Row>
@@ -185,15 +188,33 @@ class HistoryPage extends Component {
       failTemp,
       delayTime,
       cronTime,
+      consumData,
+      screenshotData,
+      analyzeFile,
+      analyzeData
     } = historyData;
-    console.log(endTime)
     const url = new URL(snippet[0].value);
     const origin = url.origin;
     const src = userData.avatar ? '' : (SERVER_HOST + userData.avatar);
+    let consumTime = endTime ? endTime - startTime : 0;
+    let displayTime = '';
+    const TimeClock = [
+      {s: "D:", t: 24},
+      {s: "H:", t: 60},
+      {s: "M:", t: 60},
+      {s: "S:", t: 60},
+      {s: "MS", t: 1000}
+    ]
+    while (TimeClock.length && consumTime) {
+      const t = TimeClock.pop();
+      displayTime = consumTime % t.t + (t.s ? t.s : '') + displayTime ;
+      consumTime = Math.floor(consumTime / t.t);
+    }
     return(
       <div className="snippet-container historyPage">
         <BackTop />
-        <Descriptions title={name} 
+        <Descriptions
+          title={name} 
           bordered
           layout="vertical"
           column={{ xxl: 4, xl: 4, lg: 4, md: 4, sm: 2, xs: 1 }}
@@ -222,7 +243,7 @@ class HistoryPage extends Component {
           <Descriptions.Item label="运行结束时间">
             {endTime ? new Date(parseInt(endTime, 0)).toLocaleString() : '未执行完毕'}
           </Descriptions.Item>
-          <Descriptions.Item label="运行耗时(ms)">{endTime ? endTime - startTime : '0'} ms</Descriptions.Item>
+          <Descriptions.Item label="运行耗时">{displayTime ? displayTime : '0'}</Descriptions.Item>
           <Descriptions.Item label="请求成功次数">{successTemp} 次</Descriptions.Item>
           <Descriptions.Item label="请求失败次数">{failTemp} 次</Descriptions.Item>
           <Descriptions.Item label="执行时延(ms)">{delayTime} ms</Descriptions.Item>
@@ -236,21 +257,20 @@ class HistoryPage extends Component {
           animated={true}
           keyboard={true}
           className="histroyTabs"
+          defaultActiveKey="1"
+          size="large"
         >
           <TabPane tab="执行代码" key="1">
             <SnippetTab snippet={snippet} />
           </TabPane>
-          <TabPane tab="执行分析" key="2">
-            Content of Tab 2
+          <TabPane tab="请求分析" key="2">
+            <RequestTab consums={consumData}/>
           </TabPane>
-          <TabPane tab="请求分析" key="3">
-            Content of Tab 3
+          <TabPane tab="性能分析" key="3">
+            <PerformanceTab analyzeFile={analyzeFile} analyzeData={analyzeData} />
           </TabPane>
-          <TabPane tab="性能分析" key="4">
-            Content of Tab 4
-          </TabPane>
-          <TabPane tab="执行截图" key="5">
-            Content of Tab 5
+          <TabPane tab="执行截图" key="4">
+            <ScreenshotTab screenshots={screenshotData} />
           </TabPane>
         </Tabs>
       </div>

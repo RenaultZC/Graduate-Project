@@ -8,8 +8,9 @@ const user = require('./router/user');
 const history = require('./router/history');
 const session = require('koa-session');
 const respond = require('koa-respond');
+const koaStatic = require('koa-static');
+const send = require('koa-send');
 const path = require('path');
-const koaStatic = require('koa-static-router');
 import Cron from './common/crontime';
 
 const CONFIG = {
@@ -26,12 +27,9 @@ const app = new Koa();
 const router = new Router();
 
 app.keys = ['HASH123'];
-const staticPath = './static';
 
-app.use(koaStatic({
-  dir: path.join(__dirname,  staticPath),
-  router: '/static/'
-}));
+app.use(koaStatic(path.join(__dirname, './static')));
+
 app.use(session(CONFIG, app));
 app.use(Cors({
   credentials: true,
@@ -42,6 +40,14 @@ app.use(respond());
 router.use('/analyze', analyze.routes(), analyze.allowedMethods());
 router.use('/history', history.routes(), history.allowedMethods());
 router.use('/user', user.routes(), user.allowedMethods());
+router.get('/analyzeFile/file/:name', async(ctx) => {
+  const name = ctx.params.name;
+  const filePath = `./static/file/${name}`;
+  ctx.attachment(filePath);
+  await send(ctx, filePath, {
+    root: __dirname
+  });
+});
 Cron.init();
 
 app.use(router.routes(), router.allowedMethods());
