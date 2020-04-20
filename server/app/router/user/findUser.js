@@ -29,10 +29,7 @@ router.get('/selectUser', async ctx => {
   if (ctx.session.type !== USER_TYPE.ADMIN)
     return ctx.unauthorized({ error: true, errCode: 1006 });
   const [res] = await select('user', query, true);
-  if (res.length) {
-    return ctx.ok({ error: false, msg: res });
-  }
-  return ctx.notFound({ error: true, errCode: 1007 });
+  return ctx.ok({ error: false, msg: res });
 });
 
 module.exports = router;

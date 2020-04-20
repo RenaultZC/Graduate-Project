@@ -6,6 +6,7 @@ const env = require('./config/env');
 const analyze = require('./router/analyze');
 const user = require('./router/user');
 const history = require('./router/history');
+const getAllData = require('./router/getAllData');
 const session = require('koa-session');
 const respond = require('koa-respond');
 const koaStatic = require('koa-static');
@@ -19,8 +20,8 @@ const CONFIG = {
   overwrite: true,
   httpOnly: true,
   signed: true,
-  rolling: false,
-  renew: false,
+  rolling: true,
+  renew: true,
 };
 
 const app = new Koa();
@@ -40,6 +41,7 @@ app.use(respond());
 router.use('/analyze', analyze.routes(), analyze.allowedMethods());
 router.use('/history', history.routes(), history.allowedMethods());
 router.use('/user', user.routes(), user.allowedMethods());
+router.use('/getAllData', getAllData.routes(), getAllData.allowedMethods());
 router.get('/analyzeFile/file/:name', async(ctx) => {
   const name = ctx.params.name;
   const filePath = `./static/file/${name}`;

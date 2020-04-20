@@ -102,7 +102,6 @@ input, textarea{outline:none;resize:none;}
 
 .brand-logo{
   margin-left: 25px;
-  margin-top: 5px;
   display: inline-block;
 }
 
@@ -113,7 +112,7 @@ input, textarea{outline:none;resize:none;}
   text-transform: uppercase;
 }
 
-.navbar-links ul {
+.navbar-links ul, .brand-logo ul {
   list-style-type: none;
   margin: 0;
   padding: 0;
@@ -121,12 +120,12 @@ input, textarea{outline:none;resize:none;}
   align-items: center; 
 }
 
-.navbar-links li {
+.navbar-links li, .brand-logo li{
   float: left;
   padding: 0px 15px;
 }
 
-.navbar-links li a , .navbar-link, .ant-dropdown .navbar-link{
+.navbar-links li a , .navbar-link, .ant-dropdown .navbar-link, .brand-logo li a{
   display: block;
   color: white;
   text-align: center;
@@ -142,11 +141,11 @@ input, textarea{outline:none;resize:none;}
   transition: all 0.3s ease-in;
 }
 
-.navbar-links li a:hover , .navbar-link:hover, .ant-dropdown .navbar-link:hover{
+.navbar-links li a:hover , .navbar-link:hover, .ant-dropdown .navbar-link:hover, .brand-logo li a:hover {
   color: #ffcb39;
 }
 
-.navbar-links .link-active, .link-active .navbar-link, .link-active.navbar-link {
+.navbar-links .link-active, .link-active .navbar-link, .link-active.navbar-link, .brand-logo .link-active {
   color: #ffcb39;
 }
 

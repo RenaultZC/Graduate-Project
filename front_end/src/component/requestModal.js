@@ -27,7 +27,7 @@ const parseURL = (url) => {
       return params;
    })(),
    hash: a.hash.replace('#', ''),
-   path: a.pathname.replace(/^([^\/])/, '/$1')
+   path: a.pathname.replace(/^([^/])/, '/$1')
   };
 }
 
@@ -78,7 +78,7 @@ export default class RequestModal extends Component {
             layout="vertical"
             column={{ xxl: 4, xl: 4, lg: 4, md: 4, sm: 2, xs: 1 }}
           >
-            <Descriptions.Item label="URL" span={4}>
+            <Descriptions.Item label="URL" span={[4, 2, 1]}>
               <Tooltip title={url} >
                 <Text ellipsis style={{width:"70vw"}}>{url}</Text>
               </Tooltip>

@@ -8,6 +8,10 @@ import Snippet from './user/snippet';
 import SnippetPage from './user/snippetPage';
 import History from './user/history';
 import HistoryPage from './user/historyPage';
+import UserPage from './user/userPage';
+import AdminPage from './admin/adminPage';
+import SnippetManage from './admin/snippetManage';
+import UserManage from './admin/userManage';
 import Head from './head';
 import './style/index.less';
 
@@ -24,6 +28,10 @@ class App extends Component {
           <Route path="/snippet/:id" exact component={SnippetPage} />
           <Route path="/history" exact component={History} />
           <Route path="/history/:id" exact component={HistoryPage} />
+          <Route path="/userCenter" exact component={UserPage} />
+          <Route path="/adminPage" exact component={AdminPage} />
+          <Route path="/snippetManage" exact component={SnippetManage} />
+          <Route path="/userManage" exact component={UserManage} />
           <Route path="*" component={NotFound}/>
         </Switch>
         <div className="footer-container">

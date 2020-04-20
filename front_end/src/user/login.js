@@ -30,7 +30,7 @@ class Login extends Component {
   }
 
   componentDidMount() {
-    const id = sessionStorage.getItem('id');
+    const id = this.props.User.id;
     if (id) {
       this.props.history.push('/');
     }

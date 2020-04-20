@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import Loading from './component/loading';
 import { SERVER_HOST } from './common/config';
 import { axiosPost, axiosGet } from './common/axios';
+import { USER_TYPE } from './common/common';
 import {mapStateToProps, mapDispatchToProps} from './common/store';
 const { Text } = Typography;
 
@@ -40,7 +41,7 @@ class Head extends Component {
     const menu = () => (
       <Menu style={{background: 'url(/static/media/bg_purple.315b225d.png)'}}>
         <Menu.Item>
-          <NavLink className="navbar-link"  activeClassName="link-active" to="/User">
+          <NavLink className="navbar-link"  activeClassName="link-active" to="/userCenter">
             个人中心
           </NavLink>
         </Menu.Item>
@@ -53,7 +54,7 @@ class Head extends Component {
     );
     return (
       <Dropdown overlay={menu}>
-        <NavLink activeClassName="link-active" to="/User" title='进入个人中心'>
+        <NavLink activeClassName="link-active" to="/userCenter" title='进入个人中心'>
           <Avatar
             src={src}
             size="small"
@@ -70,7 +71,14 @@ class Head extends Component {
       <div className="stars">
           <div className="custom-navbar">
               <div className="brand-logo">
-                  
+                  {
+                    this.props.User.type === USER_TYPE.ADMIN && 
+                    (<ul>
+                      <li><NavLink exact activeClassName="link-active" to="/adminPage">管理员页</NavLink ></li>
+                      <li><NavLink activeClassName="link-active" to="/snippetManage">代码管理</NavLink></li>
+                      <li><NavLink activeClassName="link-active" to="/userManage">用户管理</NavLink></li>
+                    </ul>)
+                  }
               </div>
               <div className="navbar-links">
                   <ul>

@@ -30,3 +30,8 @@ export const StatusBadge = {
   1: <Badge status="success" text="测试成功" />,
   2: <Badge status="error" text="测试失败" />
 };
+
+export const USER_TYPE = {
+  USER: 0,
+  ADMIN: 1
+};
