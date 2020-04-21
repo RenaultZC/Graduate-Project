@@ -33,7 +33,7 @@ class UserPage extends Component {
   render() {
     return(
       <div className="snippet-container">
-
+        UserCenter
       </div>
     );
   }

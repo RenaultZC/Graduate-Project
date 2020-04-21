@@ -177,6 +177,7 @@ export default class SnippetModal extends Component {
             filterReset: '重置',
             emptyText: '暂无数据',
           }}
+          pagination={{ showSizeChanger: false }}
           footer={this.renderFooter}
           expandable={{
             expandedRowRender: this.rowRender,

@@ -116,6 +116,7 @@ export default class SnippetTab extends Component {
           columns={columns}
           dataSource={snippet}
           footer={this.renderFooter}
+          pagination={{ showSizeChanger: false }}
           expandable={{
             expandedRowRender: this.expandedRowRender,
             rowExpandable: record => record.check,

@@ -186,6 +186,7 @@ class SnippetPage extends Component {
               style={{width: '100%'}}
               columns={columns}
               dataSource={snippet}
+              pagination={{ showSizeChanger: false }}
               locale={{
                 filterTitle: '筛选',
                 filterConfirm: '确定',

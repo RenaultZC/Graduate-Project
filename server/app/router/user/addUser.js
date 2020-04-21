@@ -4,7 +4,7 @@ import { decrypt } from '../../common/crypto';
 
 module.exports = async ctx => {
   let { username, email } = ctx.request.body;
-  const { password } = ctx.request.body;
+  const { password, avatar, type } = ctx.request.body;
   username = decrypt(username);
   email = decrypt(email);
   const [nameRes] = await select('user', { username });
@@ -13,7 +13,7 @@ module.exports = async ctx => {
   const [emailRes] = await select('user', { email });
   if (emailRes.length) return ctx.badRequest({ error: true, errCode: 1001 }); // 邮箱已存在
 
-  const [res] = await insert('user', { username, password, email, type: 0 });
+  const [res] = await insert('user', { username, password, email, type: type || 0, avatar });
   if (res.affectedRows) {
     return ctx.ok({ error: false, msg: '注册成功' });
   }

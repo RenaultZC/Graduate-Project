@@ -2,7 +2,7 @@ import CryptoJS from 'crypto-js';
 
 const SECRET_KEY = 'test+123';
 
-export const encrypt = content => {
+export const encrypt = (content='') => {
   const changeString = string => {
     var key = CryptoJS.enc.Utf8.parse(SECRET_KEY);
     var encryptResult = CryptoJS.AES.encrypt(string, key, {
@@ -23,7 +23,7 @@ export const encrypt = content => {
   return content;
 };
 
-export const decrypt = content => {
+export const decrypt = (content='') => {
   var key = CryptoJS.enc.Utf8.parse(SECRET_KEY);
   var bytes = CryptoJS.AES.decrypt(content, key, {
     //iv: key,

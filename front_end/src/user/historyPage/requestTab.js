@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import ReactEcharts from "echarts-for-react";
-import { Table, Empty, Button } from 'antd';
+import { Table, Empty } from 'antd';
 import { CloseCircleOutlined, CheckCircleOutlined } from '@ant-design/icons';
 import RequestModal from '../../component/requestModal';
 

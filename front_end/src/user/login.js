@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import classnames from 'classnames';
 import { Form, Input, Button, Typography, Modal } from 'antd';
-import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import { UserOutlined, LockOutlined, MailOutlined } from '@ant-design/icons';
 import { axiosPost } from '../common/axios';
 import { encrypt } from '../common/crypto';
 import errCode from '../common/errorCode';
@@ -26,13 +26,6 @@ class Login extends Component {
     super(props);
     this.state = {
       rigetPanelActive: false,
-    }
-  }
-
-  componentDidMount() {
-    const id = this.props.User.id;
-    if (id) {
-      this.props.history.push('/');
     }
   }
 
@@ -69,7 +62,8 @@ class Login extends Component {
         centered: true
       })
     }).finally(() => {
-      this.signUpRef.resetFields()
+      const res = this.signUpRef
+      res.resetFields();
       this.props.changeLoading(false);
     });
   };
@@ -95,7 +89,7 @@ class Login extends Component {
         centered: true
       })
     }).finally(() => {
-      this.signUpRef.resetFields()
+      this.signInRef.resetFields();
       this.props.changeLoading(false);
     });
   };
@@ -142,7 +136,7 @@ class Login extends Component {
                 },
               ]}
             >
-              <Input prefix={<UserOutlined className="site-form-item-icon" />} />
+              <Input prefix={<MailOutlined  className="site-form-item-icon" />} />
             </Form.Item>
             <Form.Item
               label="密 码"

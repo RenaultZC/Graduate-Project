@@ -12,7 +12,8 @@ import {
   getSnippetOption,
   getScreenShotOption,
   getConsumIdOption,
-  getConsumStatusOption
+  getConsumStatusOption,
+  getHistoryOption
 } from './getOption';
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -101,8 +102,12 @@ class AdminPage extends Component {
           </Col>
         </Row>
         <br/>
-        <Card hoverable title="代码运行数量统计">
+        <Card hoverable title="代码数量统计">
           <ReactEcharts option={getSnippetOption(snippetData)}/>
+        </Card>
+        <br/>
+        <Card hoverable title="运行数量统计">
+          <ReactEcharts option={getHistoryOption(historyData)}/>
         </Card>
         <br/>
         <Row gutter={16}>

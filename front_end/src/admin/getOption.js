@@ -57,6 +57,63 @@ export const getSnippetOption = (snippetData) => {
     }
   };
 }
+export const getHistoryOption = (historyData) => {
+  const year = new Date().getFullYear();
+  function getVirtulData(year) {
+    let data ={};
+    historyData.forEach(v => {
+      const dataYear = moment(parseInt(v.startTime, 0)).year();
+      const date = moment(parseInt(v.startTime, 0)).format('YYYY-MM-DD');
+      if (dataYear === year) {
+        if (data[date]) {
+          data[date]= [date, data[date][1] + 1]; 
+        }
+        data[date] = [date, 1];
+      }
+    })
+    data = Object.keys(data).map(v => data[v]);
+    return data;
+  }
+  return {
+    title: {
+      top: 30,
+      left: 'center',
+      text: new Date().getFullYear() + '年运行代码数'
+    },
+    tooltip: {
+      formatter: function (p) {
+        return `日期: ${p.data[0]}<br/>数量: ${p.data[1]}`;
+      }
+    },
+    visualMap: {
+        min: 0,
+        max: 100,
+        type: 'piecewise',
+        orient: 'horizontal',
+        left: 'center',
+        top: 65,
+        textStyle: {
+            color: '#000'
+        }
+    },
+    calendar: {
+        top: 120,
+        left: 30,
+        right: 30,
+        cellSize: ['auto', 13],
+        range: year,
+        itemStyle: {
+            borderWidth: 0.5
+        },
+        yearLabel: {show: false}
+    },
+    series: {
+        type: 'heatmap',
+        coordinateSystem: 'calendar',
+        data: getVirtulData(year)
+    }
+  };
+}
 
 export const getScreenShotOption = (screenshots) => {
   let data = {};
