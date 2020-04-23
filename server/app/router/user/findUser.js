@@ -5,11 +5,18 @@ import { USER_TYPE } from '../../config/common';
 
 router.get('/getInfo', async ctx => {
   const { query } = ctx.request;
-  if (ctx.session.id !== query.id)
+  if (ctx.session.id !== parseInt(query.id, 0))
     return ctx.unauthorized({ error: true, errCode: 1003 });
   const [res] = await select('user', query);
   if (res.length) {
-    return ctx.ok({ error: false, msg: res[0] });
+    const { avatar, email, username, type, id } = res[0];
+    return ctx.ok({ error: false, msg: {
+      avatar,
+      email,
+      username,
+      type,
+      id
+    } });
   }
   return ctx.notFound({ error: true, errCode: 1004 });
 });

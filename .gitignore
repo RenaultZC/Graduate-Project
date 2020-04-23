@@ -1,4 +1,6 @@
 server/app/config/db.js
-server/app/static
+server/app/static/avatar/*
+server/app/static/file/*
+server/app/static/img/*
 */node_modules
 */build

@@ -37,7 +37,7 @@ class Head extends Component {
   }
   renderUser() {
     const { avatar, username } = this.props.User;
-    const src = avatar ? '' : (SERVER_HOST + avatar);
+    const src = avatar ?  (SERVER_HOST + avatar) : '';
     const menu = () => (
       <Menu style={{background: 'url(/static/media/bg_purple.315b225d.png)'}}>
         <Menu.Item>

@@ -66,7 +66,10 @@ class Snippet extends Component {
         snippetData = snippetData.concat(snippetData);
         snippetData = snippetData.concat(snippetData);
         this.setState({
-          snippetData,
+          snippetData
+        })
+      }).finally(() => {
+        this.setState({
           searchOnload: false
         })
       })

@@ -4,11 +4,10 @@ import { withRouter } from 'react-router-dom';
 import { mapStateToProps, mapDispatchToProps } from '../common/store';
 import { axiosGet } from '../common/axios';
 import { USER_TYPE } from '../common/common';
-import { Table, Avatar, Popconfirm, Button, Row } from 'antd';
+import { Table, Avatar, Popconfirm, Button, Row, Col, Input } from 'antd';
 import { UserOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { SERVER_HOST } from '../common/config';
 import UserChangeModal from './changeUser';
-import { decrypt } from '../common/crypto';
 
 @connect(mapStateToProps, mapDispatchToProps)
 @withRouter
@@ -21,7 +20,7 @@ export default class UserManage extends Component {
   }
 
   componentDidMount() {
-    // if (this.props.User.type !== USER_TYPE.ADMIN ) this.props.history.push('/login');
+    if (this.props.User.type !== USER_TYPE.ADMIN ) this.props.history.push('/login');
     this.getUserData();
   }
 
@@ -60,7 +59,7 @@ export default class UserManage extends Component {
         dataIndex: 'avatar',
         key: 'avatar',
         render: avatar => {
-          const src = avatar ? '' : (SERVER_HOST + avatar);
+          const src = avatar ?  (SERVER_HOST + avatar) : '';
           const radomColor = () => {
             const arr = [0,1,2,3,4,5,6,7,8,9,'A','B','C','D','E','F'];
             let res = '#';
@@ -96,7 +95,7 @@ export default class UserManage extends Component {
       {
         title: '修改用户信息',
         render: data => (
-          <UserChangeModal user={data} shape="round"/>
+          <UserChangeModal getUserData={this.getUserData} user={data} shape="round"/>
         ),
         align: 'center'
       },
@@ -113,13 +112,48 @@ export default class UserManage extends Component {
       }
     ];
   }
+  
+  renderHeader = () => {
+    const onSearch = (username) => {
+      this.setState({searchOnload: true});
+      axiosGet('/user/findUser/selectUser', { username }).then(res => {
+        let userData = res.data.msg.filter(v => v.id !== this.props.User.id).map((v, i) => ({...v, key: i}));
+        userData = userData.concat(userData);
+        userData = userData.concat(userData);
+        userData = userData.concat(userData);
+        userData = userData.concat(userData);
+        this.setState({ 
+          userData
+        });
+      }).finally(() => {
+        this.setState({
+          searchOnload: false
+        })
+      })
+    }
+    return (
+      <div>
+        <Input.Search
+          enterButton
+          placeholder="根据用户名搜索用户"
+          onSearch={onSearch}
+          loading={this.state.searchOnload}
+        />
+      </div>
+    );
+  }
 
   render () {
     const { userData } = this.state;
     return (
       <div className="snippet-container">
-        <Row justify="end">
-          <UserChangeModal size="large" shape="" icon={<PlusCircleOutlined />}/>
+        <Row justify="space-between">
+          <Col span={12}>
+            {this.renderHeader()}
+          </Col>
+          <Col>
+            <UserChangeModal size="large" shape="" getUserData={this.getUserData} icon={<PlusCircleOutlined />}/>
+          </Col>
         </Row>
         <br/>
         <Table
@@ -127,7 +161,7 @@ export default class UserManage extends Component {
           dataSource={userData}
           pagination={{
             showSizeChanger: false,
-            pageSize: 7,
+            pageSize: 6,
           }}
         />
       </div>

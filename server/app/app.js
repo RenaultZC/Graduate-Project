@@ -35,7 +35,7 @@ app.use(session(CONFIG, app));
 app.use(Cors({
   credentials: true,
 }));
-app.use(koaBody());
+app.use(koaBody({ multipart: true }));
 app.use(respond());
 
 router.use('/analyze', analyze.routes(), analyze.allowedMethods());

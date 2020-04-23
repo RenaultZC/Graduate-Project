@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 import { mapStateToProps, mapDispatchToProps } from '../common/store';
 import { axiosGet, axiosPost } from '../common/axios';
 import { USER_TYPE } from '../common/common';
-import { Table, Button, Modal, Popconfirm } from 'antd';
+import { Table, Button, Modal, Popconfirm, Input } from 'antd';
 import ChangeSnippetModal from './changeSnippet';
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -101,6 +101,40 @@ export default class SnippetManage extends Component {
       }
     ];
   }
+  
+  renderHeader = () => {
+    const onSearch = (name) => {
+      this.setState({searchOnload: true});
+      axiosGet('/analyze/findAnalyze/selectAnalyze', { name }).then(res => {
+        let snippetData = res.data.msg.map((v, i) => {
+          v.snippet = JSON.parse(v.snippet);
+          v.key = i;
+          return v;
+        })
+        snippetData = snippetData.concat(snippetData);
+        snippetData = snippetData.concat(snippetData);
+        snippetData = snippetData.concat(snippetData);
+        snippetData = snippetData.concat(snippetData);
+        this.setState({
+          snippetData
+        })
+      }).finally(() => {
+        this.setState({
+          searchOnload: false
+        })
+      })
+    }
+    return (
+      <div>
+        <Input.Search
+          enterButton
+          placeholder="搜索测试代码"
+          onSearch={onSearch}
+          loading={this.state.searchOnload}
+        />
+      </div>
+    );
+  }
 
   render () {
     const { snippetData } = this.state;
@@ -111,8 +145,9 @@ export default class SnippetManage extends Component {
           dataSource={snippetData}
           pagination={{
             showSizeChanger: false,
-            pageSize: 7,
+            pageSize: 6,
           }}
+          title={this.renderHeader}
         />
       </div>
     );

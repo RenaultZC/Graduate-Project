@@ -23,14 +23,14 @@ export const encrypt = (content='') => {
   return content;
 };
 
-export const decrypt = (content='') => {
-  var key = CryptoJS.enc.Utf8.parse(SECRET_KEY);
-  var bytes = CryptoJS.AES.decrypt(content, key, {
+export const decrypt = (content = "") => {
+  const key = CryptoJS.enc.Utf8.parse(SECRET_KEY);
+  const bytes = CryptoJS.AES.decrypt(content, key, {
     //iv: key,
     mode: CryptoJS.mode.ECB,
     padding: CryptoJS.pad.Pkcs7,
     format: CryptoJS.format.Hex
   });
-  var decryptResult = bytes.toString(CryptoJS.enc.Utf8);
+  const decryptResult = bytes.toString(CryptoJS.enc.Utf8);
   return decryptResult.toString();
 };

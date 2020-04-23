@@ -49,11 +49,14 @@ class History extends Component {
         historyData = historyData.concat(historyData);
         historyData = historyData.concat(historyData);
         this.setState({
-          historyData,
-          searchOnload: false
+          historyData
         })
       }, err => {
         
+      }).finally(() => {
+        this.setState({
+          searchOnload: false
+        })
       })
     }
     return (

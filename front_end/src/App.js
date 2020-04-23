@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Route, Switch  } from 'react-router-dom';
-import 'antd/dist/antd.css';
 import NotFound from './404';
 import Home from './user/home';
 import Login from './user/login';
@@ -13,6 +12,7 @@ import AdminPage from './admin/adminPage';
 import SnippetManage from './admin/snippetManage';
 import UserManage from './admin/userManage';
 import Head from './head';
+import 'antd/dist/antd.css';
 import './style/index.less';
 
 
