@@ -71,7 +71,6 @@ export default class AvatarModal extends Component {
       // 上传图片
       axiosPost('/user/uploadAvatar', formData)
         .then(res => {
-          console.log(res, res.data, res.data.msg, res.data.msg.filePath, this.unmount)
           if (!this.unmount) {
             this.props.setAvatar(res.data.msg.filePath);
             this.setState({

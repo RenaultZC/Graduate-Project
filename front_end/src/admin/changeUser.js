@@ -31,7 +31,6 @@ export default class ChangeUserModal extends Component {
   }
 
   onClick = () => {
-    console.log(1)
     this.setState({visible: true});
   }
 
@@ -49,7 +48,6 @@ export default class ChangeUserModal extends Component {
   }
 
   onFinish = (values) => {
-    console.log(values);
     let path, params;
     const avatar = this.state.avatar
     const password = encrypt(values.password);
@@ -118,7 +116,6 @@ export default class ChangeUserModal extends Component {
   render() {
     const { visible, confirmLoading, user, avatar } = this.state;
     const src = avatar ?  (SERVER_HOST + avatar) : '';
-    console.log(this.state)
     return(
       <React.Fragment>
         <Button type="primary" icon={this.props.icon} shape={this.props.shape} size={this.props.size || 'small'} onClick={this.onClick}>{this.props.user ? '修改信息' : '添加用户'}</Button>

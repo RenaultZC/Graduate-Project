@@ -11,6 +11,7 @@ import ChangePasswordModal from '../component/changePassword';
 import errCode from '../common/errorCode';
 import '../style/userPage.less';
 import UserHistory from './userPage/userHistory';
+import UserSnippet from './userPage/userSnippet';
 const { TabPane } = Tabs;
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -24,14 +25,14 @@ class UserPage extends Component {
   }
 
   componentDidMount() {
-    // if (this.props.changeLoading) this.props.changeLoading(true);
+    if (this.props.changeLoading) this.props.changeLoading(true);
     this.getUserInfo();
   }
 
   getUserInfo = () => {
     const { User } = this.props;
     const id = User && User.id;
-    axiosGet('/user/findUser/getInfo', { id: 6})
+    axiosGet('/user/findUser/getInfo', { id})
       .then(res => {
         if (this.props.changeLoading) this.props.changeLoading(false);
         this.setState({user: res.data.msg});
@@ -40,8 +41,7 @@ class UserPage extends Component {
 
   setAvatar = (avatar) => {
     const path = '/user/changeUser';
-    console.log(avatar)
-    const  params = {
+    const params = {
       search: {
         id: this.state.user.id
       },
@@ -101,12 +101,12 @@ class UserPage extends Component {
             </div>
           </div>
           <div className="user-body">
-            <Tabs defaultActiveKey="1">
+            <Tabs defaultActiveKey="2">
               <TabPane tab="我的测试记录" key="1">
                 <UserHistory id={id}/>
               </TabPane>
               <TabPane tab="我使用过的代码" key="2">
-                Tab 2
+                <UserSnippet id={id}/>
               </TabPane>
             </Tabs>
           </div>
