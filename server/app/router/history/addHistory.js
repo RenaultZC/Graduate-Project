@@ -28,7 +28,7 @@ module.exports = async ctx => {
   });
   if (res.affectedRows) {
     const historyId = res.insertId;
-    new Promise(() => runAnalyze(snippet, historyId, headless, delayTime))
+    new Promise(() => runAnalyze(snippet, historyId, headless, delayTime, name, email))
       .then(async res => {
         res.endTime = Date.now();
         await update('history', {

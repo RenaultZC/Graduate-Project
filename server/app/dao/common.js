@@ -5,7 +5,7 @@ const dbConfig = require('../config/db');
 let pool;
 const getConnectionPool = () => {
   if (pool === undefined) {
-    pool = mysql.createPool(lodash.merge({ connectionLimit: 10 }, dbConfig));
+    pool = mysql.createPool(lodash.merge({ connectionLimit: 10 }, dbConfig.db));
     pool = pool.promise();
   }
   return pool;

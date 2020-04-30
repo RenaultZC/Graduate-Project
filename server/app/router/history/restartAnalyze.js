@@ -30,7 +30,7 @@ export default async({ name, historyId, snippet, delayTime, email, headless, cro
   if (res.affectedRows) {
     new Promise((resolve, reject) => {
       try {
-        runAnalyze(snippet, historyId, headless, delayTime).then(res => {
+        runAnalyze(snippet, historyId, headless, delayTime, name, email).then(res => {
           resolve(res);
         }, err => {
           reject(err);

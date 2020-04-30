@@ -1,5 +1,6 @@
 const puppeteer = require('puppeteer');
 const path = require('path');
+const sendMail = require('../../common/sendMail');
 import { HISTORY_STATUS } from '../../config/common';
 import { makePromiseForQuery } from '../../dao/common';
 
@@ -75,7 +76,7 @@ const handleViewport = async(page, width, height) => {
   await page.setViewport({ width, height });
 };
 
-const analyze = async(snippet, historyId, headless, delayTime) => {
+const analyze = async(snippet, historyId, headless, delayTime, name, email) => {
   const event = JSON.parse(snippet);
   const frame = {
     frameId: 0
@@ -211,6 +212,7 @@ const analyze = async(snippet, historyId, headless, delayTime) => {
   await browser.close();
   await insertConsums(consums);
   await insertScreenshot(screenshots);
+  sendMail(email, historyId, name);
   return {
     analyzeData: JSON.stringify(analyzeData),
     successTemp,

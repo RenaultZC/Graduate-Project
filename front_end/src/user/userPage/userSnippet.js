@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { axiosGet } from '../../common/axios';
 import { Spin, Table, Button } from 'antd';
 import { NavLink } from 'react-router-dom';
-import { StatusBadge } from '../../common/common';
 
 export default class UserHistory extends Component {
   constructor(props) {
