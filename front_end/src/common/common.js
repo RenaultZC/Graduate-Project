@@ -8,7 +8,8 @@ import {
   DownSquareOutlined,
   UploadOutlined,
   LogoutOutlined,
-  DesktopOutlined
+  DesktopOutlined,
+  ZoomInOutlined
 } from '@ant-design/icons';
 import { Badge } from 'antd';
 
@@ -22,7 +23,8 @@ export const actionIcon = {
   'select': () => <div><DownSquareOutlined /> 选择</div>,
   'submit': () => <div><UploadOutlined /> 提交</div>,
   'load': () => <div><LoadingOutlined /> 载入</div>,
-  'unload': () => <div><LogoutOutlined /> 卸载</div>
+  'unload': () => <div><LogoutOutlined /> 卸载</div>,
+  'mousemove': () => <div><ZoomInOutlined /> 移入</div>
 }
 
 export const StatusBadge = {
