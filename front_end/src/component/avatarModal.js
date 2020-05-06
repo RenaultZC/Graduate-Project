@@ -122,10 +122,10 @@ export default class AvatarModal extends Component {
               <Cropper
                 src={this.state.cropperSrc}
                 ref={cropper => this.cropper = cropper}
-                viewMode={3}
+                viewMode={1}
                 zoomable={true}
                 aspectRatio={1}
-                guides={true}
+                guides={false}
                 className="cropper"
                 preview='.cropper-preview'
               />

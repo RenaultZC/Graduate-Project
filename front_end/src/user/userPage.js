@@ -35,7 +35,9 @@ class UserPage extends Component {
     axiosGet('/user/findUser/getInfo', { id})
       .then(res => {
         if (this.props.changeLoading) this.props.changeLoading(false);
-        this.setState({user: res.data.msg});
+        const user = res.data.msg;
+        this.setState({user});
+        this.props.changeUser(user);
       })
   }
 
@@ -93,7 +95,7 @@ class UserPage extends Component {
             <div className="user-info">
               <div className="username">用户名: {username}</div>
               <div className="email"><MailOutlined /> 邮箱: {email}</div>
-              <div className="type"><UserOutlined /> 用户类型: {type === USERTYPE.ADMIN ? '管理员' : '普通用户' }</div>
+    <div className="type"><UserOutlined /> 用户类型: {type+'' === USERTYPE.ADMIN ? '管理员' : '普通用户' }</div>
             </div>
             <div className="change-info">
               <AvatarModal user={user} setAvatar={this.setAvatar}/>
@@ -101,7 +103,7 @@ class UserPage extends Component {
             </div>
           </div>
           <div className="user-body">
-            <Tabs defaultActiveKey="2">
+            <Tabs defaultActiveKey="1">
               <TabPane tab="我的测试记录" key="1">
                 <UserHistory id={id}/>
               </TabPane>

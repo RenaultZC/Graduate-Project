@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { Descriptions, Avatar, Empty, Table, Button, Modal } from 'antd';
+import { Descriptions, Avatar, Empty, Table, Button, Modal, Row } from 'antd';
 import { mapStateToProps, mapDispatchToProps } from '../common/store';
 import { CodeOutlined } from '@ant-design/icons';
 import { axiosGet, axiosPost } from '../common/axios';
@@ -137,7 +137,7 @@ class SnippetPage extends Component {
       })
     };
     return (
-      <div>
+      <Row justify="end">
         <Button type="primary" shape="round" icon={<CodeOutlined />} onClick={showModal}>开始测试</Button>
         <SnippetModal
           title={name}
@@ -151,7 +151,7 @@ class SnippetPage extends Component {
           onOk={onOk}
           snippet={this.state.snippet}
         />
-      </div>
+      </Row>
     );
   }
 

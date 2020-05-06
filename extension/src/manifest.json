@@ -1,6 +1,6 @@
 {
-    "name": "test",
-    "description": "test",
+    "name": "前端页面自动化测试系统",
+    "description": "前端页面自动化测试系统",
     "manifest_version": 2,
     "version": "1.0",
     "permissions": [

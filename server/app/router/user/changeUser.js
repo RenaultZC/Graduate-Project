@@ -1,5 +1,4 @@
 import update from '../../dao/update';
-import select from '../../dao/select';
 import { USER_TYPE } from '../../config/common';
 import { decrypt } from '../../common/crypto';
 
@@ -10,11 +9,6 @@ module.exports = async ctx => {
   const username = decrypt(value.username);
   const email = decrypt(value.email);
   const { password, avatar, type } = value;
-  const [nameRes] = await select('user', { username });
-  if (nameRes.length) return ctx.badRequest({ error: true, errCode: 1000 }); // 用户名已存在
-
-  const [emailRes] = await select('user', { email });
-  if (emailRes.length) return ctx.badRequest({ error: true, errCode: 1001 }); // 邮箱已存在
   let newValue = {};
   if (username) newValue = Object.assign(newValue, { username });
   if (password) newValue = Object.assign(newValue, { password });

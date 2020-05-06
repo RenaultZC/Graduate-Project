@@ -195,7 +195,7 @@ class HistoryPage extends Component {
     } = historyData;
     const url = new URL(snippet[0].value);
     const origin = url.origin;
-    const src = userData.avatar ? '' : (SERVER_HOST + userData.avatar);
+    const src = userData.avatar ? (SERVER_HOST + userData.avatar) : '';
     let consumTime = endTime ? endTime - startTime : 0;
     let displayTime = '';
     const TimeClock = [

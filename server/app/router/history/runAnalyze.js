@@ -183,6 +183,7 @@ const analyze = async(snippet, historyId, headless, delayTime, name, email) => {
           event[i].result = true;
         } catch (e) {
           event[i].result = false;
+          runStatus = HISTORY_STATUS.FAILED;
         }
         break;
       case 'console':

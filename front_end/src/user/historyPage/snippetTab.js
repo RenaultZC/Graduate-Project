@@ -11,7 +11,8 @@ const columns = [
     render: (text) => {
       const Element = actionIcon[text];
       return <Element />;
-    }
+    },
+    width: 75
   },
   {
     title: '选择器',
@@ -49,12 +50,13 @@ const columns = [
         </div>
       )
     },
-    align: 'center'
+    align: 'center',
+    width: 180
   },
   {
     title: '执行耗时',
     dataIndex: 'delay',
-    render: text => `${text}ms`,
+    render: text => text ? `${text}ms`: '——',
     align: 'center'
   }
 ];
@@ -72,10 +74,11 @@ export default class SnippetTab extends Component {
   }
 
   getOption(snippet) {
-    const data = snippet.map(v => {
+    const data = snippet.map((v, i) => {
       return {
         name: v.action === 'goto*' ? `${v.action} ${(new URL(v.value)).origin}` : `${v.action} ${v.value}`,
-        value: v.delay
+        value: v.delay,
+        id: i + 1
       }
     })
     return{
@@ -85,8 +88,9 @@ export default class SnippetTab extends Component {
       },
       tooltip: {
         formatter: function (info) {
-          const { name, value } = info;
+          const { name, value, id } = info.data;
           return [
+            '执行ID: &nbsp;&nbsp;' + id + '<br>',
             '执行动作: &nbsp;&nbsp;' + name + '<br>',
             '执行耗时: &nbsp;&nbsp;' + value + 'ms<br>',
           ].join('');

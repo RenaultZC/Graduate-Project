@@ -107,14 +107,14 @@ export default class SnippetModal extends Component {
     this.setState({displayTime});
   };
 
-  rowRender = (record, index) => {
+  rowRender = (record) => {
     return (
       <Form
         layout="inline"
         initialValues={record}
         onFinish={(value) => {
           const snippet = this.state.snippet;
-          snippet[index] = Object.assign(snippet[index], value);
+          snippet[record.key] = Object.assign(snippet[record.key], value);
           this.setState({snippet});
         }}
         hideRequiredMark

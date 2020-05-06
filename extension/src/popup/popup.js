@@ -18,11 +18,15 @@ let initPage = (dom, html) => {
       <th>删除</th>
     </tr>
   `)
+  if (html.length === 1) {
+    html.push(`
+      <tr><td colspan="4" style="text-align:center;"><strong>暂无数据</strong></td></tr>
+    `)
+  }
   dom.innerHTML = html.join('')
 }
 document.addEventListener('DOMContentLoaded', function () {
   //获取页面级通信的端口
-  console.log(1)
   let port, tab
   const list = document.getElementById('list'), startButton = document.getElementById('start')
   //查询当前点击标签页

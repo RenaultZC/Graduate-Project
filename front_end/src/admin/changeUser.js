@@ -35,15 +35,19 @@ export default class ChangeUserModal extends Component {
   }
 
   onCancel = () => {
-    this.setState({visible: false});  
+    const user = {...this.props.user} || {};
+    this.setState({
+      visible: false,
+      user,
+      avatar: user.avatar,
+    });  
   }
 
   static getDerivedStateFromProps(props) {
     const user = {...props.user} || {};
     user.password = decrypt(user.password); 
     return {
-      user,
-      avatar: user.avatar,
+      user
     }
   }
 
