@@ -10,8 +10,9 @@ export const getSnippetOption = (snippetData) => {
       if (dataYear === year) {
         if (data[date]) {
           data[date]= [date, data[date][1] + 1]; 
+        } else {
+          data[date] = [date, 1];
         }
-        data[date] = [date, 1];
       }
     })
     data = Object.keys(data).map(v => data[v]);
@@ -30,7 +31,7 @@ export const getSnippetOption = (snippetData) => {
     },
     visualMap: {
         min: 0,
-        max: 100,
+        max: 10,
         type: 'piecewise',
         orient: 'horizontal',
         left: 'center',
@@ -62,13 +63,14 @@ export const getHistoryOption = (historyData) => {
   function getVirtulData(year) {
     let data ={};
     historyData.forEach(v => {
-      const dataYear = moment(parseInt(v.startTime, 0)).year();
-      const date = moment(parseInt(v.startTime, 0)).format('YYYY-MM-DD');
+      const dataYear = moment(parseInt(v.createTime, 0)).year();
+      const date = moment(parseInt(v.createTime, 0)).format('YYYY-MM-DD');
       if (dataYear === year) {
         if (data[date]) {
           data[date]= [date, data[date][1] + 1]; 
+        } else {
+          data[date] = [date, 1];
         }
-        data[date] = [date, 1];
       }
     })
     data = Object.keys(data).map(v => data[v]);
@@ -87,7 +89,7 @@ export const getHistoryOption = (historyData) => {
     },
     visualMap: {
         min: 0,
-        max: 100,
+        max: 10,
         type: 'piecewise',
         orient: 'horizontal',
         left: 'center',
@@ -184,6 +186,7 @@ export const getConsumIdOption = consums => {
     legendData: [],
   };
   const newData = {};
+  consums = consums.slice(-500);
 
   consums.forEach(v => {
     newData[v.historyId] = newData[v.historyId] ? newData[v.historyId] + 1 : 1;
@@ -199,7 +202,7 @@ export const getConsumIdOption = consums => {
 
   return {
     title: {
-      text: '运行记录请求占比',
+      text: '部分运行记录请求占比',
       left: 'center'
     },
     tooltip: {

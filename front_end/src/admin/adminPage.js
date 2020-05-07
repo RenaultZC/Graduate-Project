@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { mapStateToProps, mapDispatchToProps } from '../common/store';
-import { Statistic, Card, Row, Col, Empty, Modal } from 'antd';
+import { Statistic, Card, Row, Col, Empty, Modal, Button } from 'antd';
 import errCode from '../common/errorCode';
 import { UserOutlined, CodeOutlined, HistoryOutlined } from '@ant-design/icons';
 import ReactEcharts from 'echarts-for-react';
-import { axiosGet } from '../common/axios';
+import { axiosGet, axiosPost } from '../common/axios';
 import { USER_TYPE } from '../common/common';
 import { 
   getSnippetOption,
@@ -63,18 +63,56 @@ class AdminPage extends Component {
         if (this.props.changeLoading) this.props.changeLoading(false);
       })
   }
+  // time = 1577863800000 ;
+  // temp = 5;
+  // radom = 5;
+  // index = 6;
+  // addSnippet = () => {
+  //   const snippet = this.state.snippetData;
+  //   const index = Math.floor(snippet.length * Math.random());
+  //   const userData = this.state.userData;
+  //   const userId = userData[Math.floor(userData.length * Math.random())].id;
+  //   console.log(snippet[index])
+  //   const params = {
+  //     name: '运行测试test' + this.index,
+  //     snippet: snippet[index].snippet,
+  //     headless: false,
+  //     cronTime: '',
+  //     email: '1073294992@qq.com',
+  //     delayTime: 100,
+  //     snippetId: snippet[index].id,
+  //     userId,
+  //     createTime: this.time
+  //   };
+  //   console.log(params);
+  //   axiosPost('/history/addHistory', params).then(()=> {
+  //     if (this.temp === this.radom) {
+  //       this.temp = 0;
+  //       this.radom = Math.floor(Math.random() * 10) || 1;
+  //     }
+  //     this.time = this.time + Math.floor(24 * 60 * 60 * 1000 / this.radom);
+  //     this.temp = this.temp + 1;
+  //     this.index = this.index + 1;
+  //     console.log(this.time, this.radom, this.temp, this.index, Math.floor(24 * 60 * 60 * 1000 / this.radom))
+  //     if (this.time < 1609486200000){
+  //       console.log(true);
+  //       setTimeout(this.addSnippet, 10 * 1000)
+  //     }
+  //   })
+  // }
 
   render() {
     const { loading, userData, consumData, snippetData, historyData, screenShotData } = this.state;
     if (loading) return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="暂无数据"/>;
     return (
       <div className="snippet-container">
+        {/* <Button onClick={this.addSnippet}>addSnippet</Button> */}
         <Row gutter={16}>
           <Col span={8}>
             <Card>
               <Statistic
                 title="用户数量"
-                value={userData.length * Math.floor(Math.random() * 10000)}
+                value={userData.length}
                 prefix={<UserOutlined />}
                 suffix="个"
               />
@@ -84,7 +122,7 @@ class AdminPage extends Component {
             <Card>
               <Statistic
                 title="代码数量"
-                value={snippetData.length * Math.floor(Math.random() * 10000)}
+                value={snippetData.length}
                 prefix={<CodeOutlined />}
                 suffix="个"
               />
@@ -94,7 +132,7 @@ class AdminPage extends Component {
             <Card>
               <Statistic
                 title="运行历史数量"
-                value={historyData.length * Math.floor(Math.random() * 10000)}
+                value={historyData.length}
                 prefix={<HistoryOutlined />}
                 suffix="个"
               />

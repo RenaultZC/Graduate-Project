@@ -38,14 +38,14 @@ class Snippet extends Component {
   componentDidMount () {
     if (this.props.changeLoading) this.props.changeLoading(true);
     axiosGet('/analyze/findAnalyze/getAllAnalyze').then(res => {
-      let snippetData = res.data.msg.map(v => {
-        v.snippet = JSON.parse(v.snippet);
+      const snippetData = res.data.msg.map(v => {
+        try{
+          v.snippet = JSON.parse(v.snippet);
+        } catch(e) {
+          console.log(JSON.parse(v.snippet), e)
+        }
         return v;
       })
-      snippetData = snippetData.concat(snippetData);
-      snippetData = snippetData.concat(snippetData);
-      snippetData = snippetData.concat(snippetData);
-      snippetData = snippetData.concat(snippetData);
       this.setState({
         snippetData
       })
@@ -57,14 +57,10 @@ class Snippet extends Component {
     const onSearch = (name) => {
       this.setState({searchOnload: true});
       axiosGet('/analyze/findAnalyze/selectAnalyze', { name }).then(res => {
-        let snippetData = res.data.msg.map(v => {
+        const snippetData = res.data.msg.map(v => {
           v.snippet = JSON.parse(v.snippet);
           return v;
         })
-        snippetData = snippetData.concat(snippetData);
-        snippetData = snippetData.concat(snippetData);
-        snippetData = snippetData.concat(snippetData);
-        snippetData = snippetData.concat(snippetData);
         this.setState({
           snippetData
         })
@@ -93,6 +89,7 @@ class Snippet extends Component {
           itemLayout="vertical"
           size="large"
           pagination={{
+            showSizeChanger: false,
             pageSize: 3,
           }}
           dataSource={this.state.snippetData}

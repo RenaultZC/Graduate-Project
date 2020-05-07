@@ -28,11 +28,7 @@ export default class UserManage extends Component {
     if (this.props.changeLoading) this.props.changeLoading(true);
     axiosGet('/user/findUser/getAllUser')
       .then(res => {
-        let userData = res.data.msg.filter(v => v.id !== this.props.User.id).map((v, i) => ({...v, key: i}));
-        userData = userData.concat(userData);
-        userData = userData.concat(userData);
-        userData = userData.concat(userData);
-        userData = userData.concat(userData);
+        const userData = res.data.msg.filter(v => v.id !== this.props.User.id).map((v, i) => ({...v, key: i}));
         this.setState({ 
           userData
         });
@@ -117,11 +113,7 @@ export default class UserManage extends Component {
     const onSearch = (username) => {
       this.setState({searchOnload: true});
       axiosGet('/user/findUser/selectUser', { username }).then(res => {
-        let userData = res.data.msg.filter(v => v.id !== this.props.User.id).map((v, i) => ({...v, key: i}));
-        userData = userData.concat(userData);
-        userData = userData.concat(userData);
-        userData = userData.concat(userData);
-        userData = userData.concat(userData);
+        const userData = res.data.msg.filter(v => v.id !== this.props.User.id).map((v, i) => ({...v, key: i}));
         this.setState({ 
           userData
         });

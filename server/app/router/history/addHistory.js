@@ -15,6 +15,7 @@ module.exports = async ctx => {
     snippetId,
     startTime,
     status: HISTORY_STATUS.RUNNING,
+    createTime: startTime,
     name,
     snippet,
     cronTime,
@@ -28,9 +29,20 @@ module.exports = async ctx => {
   });
   if (res.affectedRows) {
     const historyId = res.insertId;
-    new Promise(() => runAnalyze(snippet, historyId, headless, delayTime, name, email))
+    new Promise((resolve, reject) => {
+      try {
+        runAnalyze(snippet, historyId, headless, delayTime, name, email).then(res => {
+          resolve(res);
+        }, err => {
+          reject(err);
+        });
+      } catch (e) {
+        reject(e);
+      }
+    })
       .then(async res => {
         res.endTime = Date.now();
+        console.log('success', historyId);
         await update('history', {
           search: {
             id: historyId
@@ -38,6 +50,7 @@ module.exports = async ctx => {
           value: res
         });
       }, async() => {
+        console.log('fialed', historyId);
         await update('history', {
           search: {
             id: historyId

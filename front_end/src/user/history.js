@@ -21,14 +21,10 @@ class History extends Component {
   componentDidMount() {
     this.props.changeLoading(true);
     axiosGet(`/history/findhistory/getAllHistory`).then(res => {
-      let historyData = res.data.msg.map(v => {
+      const historyData = res.data.msg.map(v => {
         v.snippet = JSON.parse(v.snippet);
         return v;
       })
-      historyData = historyData.concat(historyData);
-      historyData = historyData.concat(historyData);
-      historyData = historyData.concat(historyData);
-      historyData = historyData.concat(historyData);
       this.setState({
         historyData
       })
@@ -40,14 +36,10 @@ class History extends Component {
     const onSearch = (name) => {
       this.setState({searchOnload: true});
       axiosGet('/history/findHistory/selectHistory', { name }).then(res => {
-        let historyData = res.data.msg.map(v => {
+        const historyData = res.data.msg.map(v => {
           v.snippet = JSON.parse(v.snippet);
           return v;
         })
-        historyData = historyData.concat(historyData);
-        historyData = historyData.concat(historyData);
-        historyData = historyData.concat(historyData);
-        historyData = historyData.concat(historyData);
         this.setState({
           historyData
         })
@@ -79,10 +71,11 @@ class History extends Component {
           size="large"
           pagination={{
             pageSize: 3,
+            showSizeChanger: false,
           }}
           dataSource={this.state.historyData}
           renderItem={item => {
-            const time = new Date(parseInt(item.startTime, 0)).toLocaleDateString();
+            const time = new Date(parseInt(item.createTime, 0)).toLocaleDateString();
             const length = item.snippet.length;
             const origin = new URL(item.snippet[0].value).origin;
             const avatar = origin + '/favicon.ico';

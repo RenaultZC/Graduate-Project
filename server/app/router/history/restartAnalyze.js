@@ -40,6 +40,7 @@ export default async({ name, historyId, snippet, delayTime, email, headless, cro
       }
     })
       .then(async res => {
+        console.log('success', historyId);
         res.endTime = Date.now();
         await update('history', {
           search: {
@@ -47,7 +48,8 @@ export default async({ name, historyId, snippet, delayTime, email, headless, cro
           },
           value: res
         });
-      }, async() => {
+      }, async(e) => {
+        console.log('failed', historyId, e);
         await update('history', {
           search: {
             id: historyId

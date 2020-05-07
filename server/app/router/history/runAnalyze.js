@@ -58,14 +58,10 @@ const handleKeyDown = async(page, selector, value) => {
   await page.type(selector, value);
 };
 
-const handleClick = async(page, selector, clientRect) => {
-  if (clientRect) {
-    const { x, y } = clientRect;
-    await page.mouse.click(x, y);
-  } else {
-    await page.waitForSelector(selector);
-    await page.click(selector);
-  }
+const handleClick = async(page, selector) => {
+  if (!selector) return;
+  await page.waitForSelector(selector);
+  await page.click(selector);
 };
 
 const handleGoto = async(page, href) => {
@@ -74,6 +70,21 @@ const handleGoto = async(page, href) => {
 
 const handleViewport = async(page, width, height) => {
   await page.setViewport({ width, height });
+};
+
+const handleMouseMove = async(page, x, y) => {
+  if (!page) return;
+  let mouse;
+  try {
+    mouse = page.mouse;
+  } catch (e) {
+    console.log(e, page);
+  }
+  if (!mouse) return;
+
+  if (x && y) {
+    await mouse.move(x, y);
+  }
 };
 
 const analyze = async(snippet, historyId, headless, delayTime, name, email) => {
@@ -139,23 +150,31 @@ const analyze = async(snippet, historyId, headless, delayTime, name, email) => {
       selectorArr = selector.split(' > ')[4];
     }
 
-    if (!frame[`${frameId}`]) {
+    if (!frame[frameId]) {
       const frames = await frame['0'].frames();
-      frame[`${frameId}`] = await frames.find(f => f.url() === frameUrl);
+      frame[frameId] = await frames.find(f => f.url() === frameUrl);
+      if (!frame[frameId]) {
+        frame[frameId] = await frames.find(f => {
+          const newFrameUrl = new URL(frameUrl);
+          const newF = new URL(f.url());
+          if (newFrameUrl.origin + newFrameUrl.pathname === newF.origin + newF.pathname) {
+            return true;
+          }
+          return f.url() === frameUrl;
+        });
+      }
     }
 
-    page = frame[`${frameId}`];
-    const mouse = page.mouse;
-
-    if (x && y) {
-      await mouse.move(x, y);
+    page = frame[frameId];
+    if (selectorArr && selectorArr.length && selectorArr[selectorArr.length - 1][0] === '#') {
+      selectorArr = selectorArr.slice(-1);
     }
-
     switch (action) {
       case 'keydown':
         await handleKeyDown(page, selectorArr, value);
         break;
       case 'click':
+        await handleMouseMove(frame[0], x, y);
         await handleClick(page, selectorArr, clientRect);
         break;
       case 'change':
@@ -171,7 +190,9 @@ const analyze = async(snippet, historyId, headless, delayTime, name, email) => {
       case 'viewport*':
         await handleViewport(page, value.width, value.height);
         break;
-      default: break;
+      default:
+        await handleMouseMove(frame[0], x, y);
+        break;
     }
     const delay = Date.now() - startTime;
     event[i].delay = delay;
@@ -197,11 +218,11 @@ const analyze = async(snippet, historyId, headless, delayTime, name, email) => {
       default: break;
     }
     const screenshotPath = `/img/${historyId}_${i}.png`;
-    await page.screenshot({ path: path.resolve(__dirname, `../../static${screenshotPath}`), fullPage: true });
+    await frame['0'].screenshot({ path: path.resolve(__dirname, `../../static${screenshotPath}`), fullPage: true });
     screenshots.push([ historyId, screenshotPath ]);
   }
 
-  await page.tracing.stop();
+  await frame['0'].tracing.stop();
 
   const analyzeData = await performance(page);
   Object.keys(urls).forEach(v => {

@@ -21,15 +21,11 @@ export default class SnippetManage extends Component {
     if (this.props.changeLoading) this.props.changeLoading(true);
     axiosGet('/analyze/findAnalyze/getAllAnalyze')
       .then(res => {
-      let snippetData = res.data.msg.map((v, i) => {
+      const snippetData = res.data.msg.map((v, i) => {
         v.snippet = JSON.parse(v.snippet);
         v.key = i;
         return v;
       })
-      snippetData = snippetData.concat(snippetData);
-      snippetData = snippetData.concat(snippetData);
-      snippetData = snippetData.concat(snippetData);
-      snippetData = snippetData.concat(snippetData);
       this.setState({
         snippetData
       })
@@ -106,15 +102,11 @@ export default class SnippetManage extends Component {
     const onSearch = (name) => {
       this.setState({searchOnload: true});
       axiosGet('/analyze/findAnalyze/selectAnalyze', { name }).then(res => {
-        let snippetData = res.data.msg.map((v, i) => {
+        const snippetData = res.data.msg.map((v, i) => {
           v.snippet = JSON.parse(v.snippet);
           v.key = i;
           return v;
         })
-        snippetData = snippetData.concat(snippetData);
-        snippetData = snippetData.concat(snippetData);
-        snippetData = snippetData.concat(snippetData);
-        snippetData = snippetData.concat(snippetData);
         this.setState({
           snippetData
         })

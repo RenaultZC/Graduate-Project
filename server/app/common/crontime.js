@@ -21,7 +21,7 @@ class Corn {
     if (this.cronList.has(id)) this.stop(id);
     if (!cronTime) return;
     this.cronList.set(id, cron.schedule(cronTime, () => {
-      restartAnalyze(params);
+      restartAnalyze(Object.assign(params, { historyId: id }));
     }));
   }
 

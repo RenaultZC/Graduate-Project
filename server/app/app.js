@@ -16,7 +16,7 @@ import Cron from './common/crontime';
 
 const CONFIG = {
   key: 'SESSION',
-  maxAge: 60 * 60 * 1000,
+  maxAge: 2 * 60 * 60 * 1000,
   overwrite: true,
   httpOnly: true,
   signed: true,
