@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { mapStateToProps, mapDispatchToProps } from '../common/store';
-import { Statistic, Card, Row, Col, Empty, Modal, Button } from 'antd';
+import { Statistic, Card, Row, Col, Empty, Modal} from 'antd'; // , Button 
 import errCode from '../common/errorCode';
 import { UserOutlined, CodeOutlined, HistoryOutlined } from '@ant-design/icons';
 import ReactEcharts from 'echarts-for-react';
-import { axiosGet, axiosPost } from '../common/axios';
+import { axiosGet} from '../common/axios'; // , axiosPost 
 import { USER_TYPE } from '../common/common';
 import { 
   getSnippetOption,

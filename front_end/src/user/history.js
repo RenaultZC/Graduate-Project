@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { withRouter } from 'react-router-dom';
 import { StatusBadge } from '../common/common';
+import { SERVER_HOST } from '../common/config';
 import { ChromeFilled } from '@ant-design/icons';
 
 @connect(null, mapDispatchToProps)
@@ -92,12 +93,23 @@ class History extends Component {
                     style={{width: '100px', height: '100px'}}
                     alt="logo"
                     src={avatar}
-                    icon={<ChromeFilled />} 
+                    icon={<ChromeFilled />}
+                    onError={e=> {
+                      if(e && e.target && e.target.src)
+                        e.target.src = SERVER_HOST + '/avatar/1588756245277_11.jpeg';
+                      return false;
+                    }}
                   />
                 }
               >
                 <List.Item.Meta
-                  avatar={<Avatar src={avatar} icon={<ChromeFilled />} />}
+                  avatar={<Avatar src={avatar} icon={<ChromeFilled />}
+                    onError={e=> {
+                      if(e && e.target && e.target.src)
+                        e.target.src = SERVER_HOST + '/avatar/1588756245277_11.jpeg';
+                      return false;
+                    }}/>
+                  }
                   title={<NavLink to={`/history/${item.id}`}>{item.name}</NavLink>}
                   description={`测试网址: ${origin}`}
                 />

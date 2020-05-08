@@ -4,6 +4,7 @@ import { ClockCircleOutlined, CodeOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { axiosGet } from '../common/axios';
+import { SERVER_HOST } from '../common/config';
 import '../style/snippet.less';
 
 const IconText = ({ icon, text }) => (
@@ -110,11 +111,21 @@ class Snippet extends Component {
                     width={100}
                     alt="logo"
                     src={avatar}
+                    onError={e=> {
+                      if(e && e.target && e.target.src)
+                        e.target.src = SERVER_HOST + '/avatar/1588756245277_11.jpeg';
+                      return false;
+                    }}
                   />
                 }
               >
                 <List.Item.Meta
-                  avatar={<Avatar src={avatar} />}
+                  avatar={<Avatar src={avatar}
+                  onError={e=> {
+                    if(e && e.target && e.target.src)
+                      e.target.src = SERVER_HOST + '/avatar/1588756245277_11.jpeg';
+                    return false;
+                  }}/>}
                   title={<NavLink to={`/snippet/${item.id}`}>{item.name}</NavLink>}
                   description={`测试网址: ${origin}`}
                 />

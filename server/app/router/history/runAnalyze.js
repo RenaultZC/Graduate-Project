@@ -65,7 +65,7 @@ const handleClick = async(page, selector) => {
 };
 
 const handleGoto = async(page, href) => {
-  await page.goto(href);
+  await page.goto(href, { timeout: 60 * 1000 });
 };
 
 const handleViewport = async(page, width, height) => {
@@ -174,7 +174,7 @@ const analyze = async(snippet, historyId, headless, delayTime, name, email) => {
         await handleKeyDown(page, selectorArr, value);
         break;
       case 'click':
-        await handleMouseMove(frame[0], x, y);
+        await handleMouseMove(page, x, y);
         await handleClick(page, selectorArr, clientRect);
         break;
       case 'change':
@@ -190,9 +190,10 @@ const analyze = async(snippet, historyId, headless, delayTime, name, email) => {
       case 'viewport*':
         await handleViewport(page, value.width, value.height);
         break;
-      default:
-        await handleMouseMove(frame[0], x, y);
+      case 'mousemove':
+        await handleMouseMove(page, x, y);
         break;
+      default: break;
     }
     const delay = Date.now() - startTime;
     event[i].delay = delay;

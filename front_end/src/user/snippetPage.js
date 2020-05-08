@@ -9,6 +9,7 @@ import { actionIcon } from '../common/common';
 import SnippetModal from '../component/snippetModal';
 import errCode from '../common/errorCode';
 import '../style/snippetPage.less';
+import { SERVER_HOST } from '../common/config';
 
 const columns = [
   {
@@ -18,7 +19,8 @@ const columns = [
     render: (text) => {
       const Element = actionIcon[text];
       return <Element />;
-    }
+    },
+    width: 75
   },
   {
     title: '选择器',
@@ -177,7 +179,14 @@ class SnippetPage extends Component {
           <Descriptions.Item label="创建时间">{new Date(parseInt(time, 0)).toLocaleString()}</Descriptions.Item>
           <Descriptions.Item label="测试网址">
             <a href={origin} target="_blank">
-              <Avatar shape="square" src={origin+'/favicon.ico'}/>{origin}
+              <Avatar
+                shape="square"
+                src={origin+'/favicon.ico'}
+                onError={e=> {
+                  if(e && e.target && e.target.src)
+                    e.target.src = SERVER_HOST + '/avatar/1588756245277_11.jpeg';
+                  return false;
+                }}/>{origin}
             </a>
           </Descriptions.Item>  
           <Descriptions.Item label="测试代码长度">{snippet.length}行</Descriptions.Item>

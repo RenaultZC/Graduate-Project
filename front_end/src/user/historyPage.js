@@ -222,7 +222,12 @@ class HistoryPage extends Component {
           <Descriptions.Item label="运行名称">{name}</Descriptions.Item>
           <Descriptions.Item label="测试网址">
             <a href={origin} target="_blank">
-              <Avatar shape="square" src={origin+'/favicon.ico'}/>{origin}
+              <Avatar shape="square" src={origin+'/favicon.ico'} 
+                onError={e=> {
+                  if(e && e.target && e.target.src)
+                    e.target.src = SERVER_HOST + '/avatar/1588756245277_11.jpeg';
+                  return false;
+                }}/>{origin}
             </a>
           </Descriptions.Item>  
           <Descriptions.Item label="测试代码长度">{snippet.length}行</Descriptions.Item>
