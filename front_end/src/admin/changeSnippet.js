@@ -267,7 +267,7 @@ export default class ChangeSnippetModal extends Component {
             rowClassName={() => 'editable-row'}
             components={components}
             dataSource={snippet}
-            pagination={{ showSizeChanger: false, pageSize: 8 }}
+            pagination={{ showSizeChanger: false, pageSize: 6 }}
             locale={{
               filterTitle: '筛选',
               filterConfirm: '确定',
