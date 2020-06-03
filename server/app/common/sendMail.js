@@ -20,7 +20,7 @@ const sendEmail = (email, id, name) => {
   };
   transporter.sendMail(mailOptions, err => {
     if (err) {
-      throw Error('邮件发送失败');
+      console.log('邮件发送失败', err);
     }
     transporter.close();
   });

@@ -82,10 +82,6 @@ export default class UserHistory extends Component {
           snippet: JSON.parse(v.snippet),
           key: 1,
         }));
-        snippetData.push(...snippetData);
-        snippetData.push(...snippetData);
-        snippetData.push(...snippetData);
-        snippetData.push(...snippetData);
         this.setState({snippetData, loading: false});
       })
       .finally(() => {

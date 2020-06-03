@@ -102,11 +102,6 @@ export default class UserHistory extends Component {
             key: i,
           }
         })
-        historyData.push(...historyData);
-        historyData.push(...historyData);
-        historyData.push(...historyData);
-        historyData.push(...historyData);
-        historyData.push(...historyData);
         this.setState({historyData, loading: false});
       })
       .finally(() => {
